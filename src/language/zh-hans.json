@@ -1,0 +1,20 @@
+{
+  "home": "首页",
+  "topic": "话题",
+  "search": "搜索",
+  "login": "登录",
+  "regist": "注册",
+  "write": "写文章",
+  "theme-model": "夜间模式",
+  "on": "开",
+  "off": "关",
+  "song": "宋体",
+  "yahei": "黑体",
+  "my-page": "我的主页",
+  "my-collect": "收藏的文章",
+  "my-like": "喜欢的文章",
+  "my-focus": "关注",
+  "setting": "设置",
+  "help-feed": "帮助与反馈",
+  "log-out": "退出"
+}

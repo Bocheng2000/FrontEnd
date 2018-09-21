@@ -1,0 +1,71 @@
+const vendors = [
+  'react',
+  'react-dom',
+  'react-redux',
+  'react-router',
+  'react-router-redux',
+  'redux',
+]
+
+module.exports = {
+  entry: {
+    index: "./src/index.tsx",
+    vendor: vendors,
+  },
+  output: {
+    filename: "index.js",
+    path: __dirname + "/dist",
+    publicPath: '/dist/',
+    chunkFilename: '[name].[chunkhash:5].js'
+  },
+  devtool: "source-map",
+  performance: {
+    hints: "warning", // 枚举
+    maxAssetSize: 30000000, // 整数类型（以字节为单位）
+    maxEntrypointSize: 50000000, // 整数类型（以字节为单位）
+    assetFilter: function (assetFilename) {
+      return assetFilename.endsWith('.css') || assetFilename.endsWith('.js');
+    }
+  },
+  resolve: {
+    extensions: [".ts", ".tsx", ".js", ".jsx", ".less", ".css", ".json"]
+  },
+
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        query: {
+          plugins: ['transform-runtime'],
+          presets: ['es2015', 'react', 'stage-2']
+        }
+      },
+      {
+        test: /\.tsx?$/,
+        loader: "ts-loader"
+      },
+      {
+        test: /src\/containers(\/.*).(tsx|ts)/,
+        loader: "bundle-loader?lazy!ts-loader"
+      },
+      {
+        test: /\.css$/,
+        loader: "style-loader!css-loader?modules"
+      },
+      {
+        test: /\.less$/,
+        loader: 'style-loader!css-loader!less-loader',
+      },
+      {
+        enforce: "pre",
+        test: /\.js$/,
+        loader: "source-map-loader"
+      }
+    ]
+  },
+
+  plugins: [
+  ],
+};
