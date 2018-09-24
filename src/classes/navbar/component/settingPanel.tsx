@@ -8,6 +8,7 @@ import { EFontColor, ESystemTheme, ELanguageEnv, EFontFamily } from '../../../re
 import { ISwitchData } from '../../component/switchBtn'
 import { getThemeColor, getFontFamily } from '../../../utils/font'
 import localWithKey from '../../../language';
+import * as instance from '../../../utils/instance'
 
 export interface ISettingPanelProps {
   ref?: (e: React.Component) => void;
@@ -70,6 +71,8 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
             'mode': ESystemTheme.night,
             'fontColor': EFontColor.night,
           })
+          localStorage.setItem('mode', '1')
+          localStorage.setItem('fontColor', '1')
         },
       },
       {
@@ -82,6 +85,8 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
             'mode': ESystemTheme.day,
             'fontColor': EFontColor.day,
           })
+          localStorage.setItem('mode', '')
+          localStorage.setItem('fontColor', '')
         },
       }
     ]
@@ -96,9 +101,12 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
         style: {
           IFontFamily: getFontFamily(EFontFamily.songti),
         },
-        handler: () => this.mainAction.updateSystemConfig({
-          'fontFamily': EFontFamily.songti,
-        })
+        handler: () => {
+          this.mainAction.updateSystemConfig({
+            'fontFamily': EFontFamily.songti,
+          })
+          localStorage.setItem('fontFamily', '1')
+        }
       },
       {
         title: localWithKey(language, 'yahei'),
@@ -106,9 +114,12 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
         style: {
           IFontFamily: getFontFamily(EFontFamily.yahei),
         },
-        handler: () => this.mainAction.updateSystemConfig({
-          'fontFamily': EFontFamily.yahei,
-        })
+        handler: () => {
+          this.mainAction.updateSystemConfig({
+            'fontFamily': EFontFamily.yahei,
+          })
+          localStorage.setItem('fontFamily', '')
+        }
       }
     ]
   }
@@ -119,23 +130,35 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
       {
         title: '简',
         high: language === ELanguageEnv.zhHans,
-        handler: () => this.mainAction.updateSystemConfig({
-          'language': ELanguageEnv.zhHans,
-        })
+        handler: () => {
+          this.mainAction.updateSystemConfig({
+            'language': ELanguageEnv.zhHans,
+          })
+          localStorage.setItem('language', '')
+          instance.setValueByKey('language', ELanguageEnv.zhHans)
+        }
       },
       {
         title: '繁',
         high: language === ELanguageEnv.zhHant,
-        handler: () => this.mainAction.updateSystemConfig({
-          'language': ELanguageEnv.zhHant,
-        })
+        handler: () => {
+          this.mainAction.updateSystemConfig({
+            'language': ELanguageEnv.zhHant,
+          })
+          localStorage.setItem('language', '1')
+          instance.setValueByKey('language', ELanguageEnv.zhHant)
+        }
       },
       {
         title: 'English',
         high: language === ELanguageEnv.en,
-        handler: () => this.mainAction.updateSystemConfig({
-          'language': ELanguageEnv.en,
-        })
+        handler: () => {
+          this.mainAction.updateSystemConfig({
+            'language': ELanguageEnv.en,
+          })
+          localStorage.setItem('language', '2')
+          instance.setValueByKey('language', ELanguageEnv.en)
+        }
       }
     ]
   }

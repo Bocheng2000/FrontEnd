@@ -1,19 +1,24 @@
 import * as React from 'React'
 import { connect } from 'react-redux'
-import { History } from 'history'
+import { bindActionCreators, Dispatch } from 'redux'
+import * as instance from '../../utils/instance'
 import { IStoreState } from '../../reducer'
 import { EFontFamily, EFontColor, ELanguageEnv, ESystemTheme } from '../../reducer/main'
+import { ILoginResponse } from '../../http/user'
 import { getFontFamily, getFontColor } from '../../utils/font'
 import localWithKey from '../../language'
 import SettingPanel from './component/settingPanel'
 import UserController from './component/userController'
+import { getHashUrl } from '../../utils/http'
+import * as UserActions from '../../action/user'
 
 export interface INavbarProps {
   fontFamily: EFontFamily;
   fontColor: EFontColor;
   language: ELanguageEnv;
   mode: ESystemTheme;
-  history: History;
+  user: ILoginResponse;
+  dispatch?: Dispatch;
 }
 
 interface INavbarState {
@@ -23,8 +28,11 @@ interface INavbarState {
 class Navbar extends React.Component<INavbarProps, INavbarState> {
   private settingPanel: any
   private loginPanel: any
+  private userAction: typeof UserActions
+
   constructor(props: INavbarProps) {
     super(props)
+    this.userAction = bindActionCreators(UserActions, props.dispatch)
     this.state = {
       index: 0
     }
@@ -44,7 +52,7 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
   }
 
   linkTo(path: string, idx: number) {
-    this.props.history.push(path)
+    instance.getValueByKey("history").push(path)
     this.setHighIndex(idx)
   }
 
@@ -61,6 +69,10 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
     if (wrap && wrap.hide) {
       wrap.hide()
     }
+  }
+
+  push(path: string) {
+    instance.getValueByKey("history").push(path)
   }
 
   settingEnter(e: React.MouseEvent) {
@@ -83,6 +95,16 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
     if (index !== idx) {
       this.setState({ index: idx })
     }
+  }
+
+  signOutClick() {
+    localStorage.removeItem("user")
+    localStorage.removeItem("phone")
+    localStorage.removeItem("password")
+    localStorage.removeItem("remeber")
+    instance.removeValueByKey('language')
+    this.userAction.updateKeyValue('info', undefined)
+    this.loginPanel.hide()
   }
 
   renderSearchBar(): JSX.Element {
@@ -112,31 +134,37 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
     const { language } = this.props
     return (
       <div>
-        <span className="login" >
+        <span
+          className="login"
+          onClick={() => this.push('/l')}
+        >
           {localWithKey(language, 'login')}
         </span>
-        <span className="regist" >
-          {localWithKey(language, 'regist')}
+        <span
+          className="regist"
+          onClick={() => this.push('/r')}
+        >
+          {localWithKey(language, 'register')}
         </span>
       </div>
     )
   }
 
   renderLogined() {
-    const { mode } = this.props
+    const { mode, user } = this.props
     return (
       <div
         className={`user-mask ${mode === ESystemTheme.day ? 'button-day' : 'button-night'}`}
         onMouseEnter={(e) => this.loginEnter(e)}
         onMouseLeave={() => this.loginLeave()}
       >
-        <img className="avatar" src="https://pic1.zhimg.com/v2-f61af1c9cebe97e8743d32114ab890fd.jpg"/>
+        <img className="avatar" src={getHashUrl(user.avatar)} />
       </div>
     )
   }
 
   renderMenus(): JSX.Element {
-    const { language } = this.props
+    const { language, user } = this.props
     return (
       <div className="menus">
         <i
@@ -144,7 +172,11 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
           onMouseEnter={(e) => this.settingEnter(e)}
           onMouseLeave={() => this.settingLeave()}
         />
-        {this.renderLogined()}
+        {
+          user ?
+            this.renderLogined():
+            this.renderUnLogin()
+        }
         <span className="write" >
           <i className="iconfont icon-bi bi" />
           {localWithKey(language, 'write')}
@@ -192,6 +224,7 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
             fontColor={fontColor}
             language={language}
             mode={mode}
+            signOut={() => this.signOutClick()}
           />
         </div>
         <div className="holder" />
@@ -200,12 +233,16 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
   }
 }
 
-function mapStateToProps({ main: { system: { fontFamily, fontColor, language, mode } } }: IStoreState) {
+function mapStateToProps({
+  main: { system: { fontFamily, fontColor, language, mode } },
+  user: { info }
+}: IStoreState) {
   return {
     fontFamily,
     fontColor,
     language,
     mode,
+    user: info,
   }
 }
 

@@ -5,15 +5,16 @@ import { getFontColor } from '../../../utils/font'
 import localWithKey from '../../../language'
 
 export interface IUserControllerProps {
-  ref?: (e: React.Component) => void;
-  mode: ESystemTheme;
-  fontFamily: EFontFamily;
-  language: ELanguageEnv;
-  fontColor: EFontColor;
+  ref?: (e: React.Component) => void
+  mode: ESystemTheme
+  fontFamily: EFontFamily
+  language: ELanguageEnv
+  fontColor: EFontColor
+  signOut?: () => void
 }
 
 interface IUserControllerState {
-  visible: boolean;
+  visible: boolean
 }
 
 export default class UserController extends React.Component<IUserControllerProps, IUserControllerState> {
@@ -114,7 +115,15 @@ export default class UserController extends React.Component<IUserControllerProps
             style={{ color: getFontColor(fontColor)}}
           >{localWithKey(language, 'help-feed')}</span>
         </div>
-        <div className={cellClass}>
+        <div
+          className={cellClass}
+          onClick={() => {
+            const { signOut } = this.props
+            if (signOut) {
+              signOut()
+            }
+          }}
+        >
           <i className="iconfont icon-ai-out icon" />
           <span
             className="menu-text"

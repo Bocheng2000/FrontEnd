@@ -1,4 +1,5 @@
 import { IUpdateKeyValue, IUpdateSystemConfig } from '../action/main'
+import { getThemeColor } from '../utils/font'
 
 export enum ESystemTheme {
   day = 0,
@@ -31,18 +32,28 @@ export interface IMainState {
   version: string,
 }
 
+function getConfig() {
+  const mode = localStorage.getItem('mode')
+  const fontFamily = localStorage.getItem('fontFamily')
+  const fontColor = localStorage.getItem('fontColor')
+  const language = localStorage.getItem('language')
+  const o = {
+    mode: !mode ? ESystemTheme.day : parseInt(mode),
+    fontFamily: !fontFamily ? EFontFamily.yahei : parseInt(fontFamily),
+    fontColor: !fontColor ? EFontColor.day : parseInt(fontColor),
+    language: !language ? ELanguageEnv.zhHans : parseInt(language)
+  }
+  const target: HTMLElement = document.getElementsByTagName('body')[0]
+  target.style.background = getThemeColor(o.mode)
+  return o
+}
+
 const initState: IMainState = {
-  system: {
-    mode: ESystemTheme.day,
-    fontFamily: EFontFamily.yahei,
-    fontColor: EFontColor.day,
-    language: ELanguageEnv.zhHans,
-  },
+  system: getConfig(),
   version: '1.0.0',
 }
 
 export default function main(state: IMainState = initState, action: any): IMainState {
-
   let act
   switch (action.type) {
     case 'Main/update_key_value':
