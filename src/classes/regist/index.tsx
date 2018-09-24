@@ -257,7 +257,6 @@ class Regist extends React.Component<IRegistProps, IRegistState> {
   }
 }
 
-
 function mapStateToProps({ main: { system: { fontFamily, fontColor, language, mode } } }: IStoreState) {
   return {
     fontFamily,

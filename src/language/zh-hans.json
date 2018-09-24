@@ -34,5 +34,9 @@
   "number-illegal": "手机号不合法",
   "input-code": "请输入验证码",
   "input-password": "请输入密码",
-  "register-success": "注册成功"
+  "register-success": "注册成功",
+  "base-setting": "基础设置",
+  "person-info": "个人资料",
+  "admired-setting": "赞赏设置",
+  "account-manager": "账号管理"
 }

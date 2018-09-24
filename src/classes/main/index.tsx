@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Route, match, Link, Switch, Redirect } from 'react-router-dom'
 import Navbar from '../navbar'
+import Setting from '../setting'
 
 interface IMainProps {
   match?: match;
@@ -13,9 +14,10 @@ class Main extends React.Component<IMainProps> {
     return (
       <div>
         <Navbar />
-        {/* <Switch>
-          <Redirect to="/404" />
-        </Switch> */}
+        <Switch>
+          <Route path="/s" component={Setting} />
+          {/* <Redirect to="/404" /> */}
+        </Switch>
       </div>
     )
   }

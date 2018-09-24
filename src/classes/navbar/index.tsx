@@ -5,7 +5,7 @@ import * as instance from '../../utils/instance'
 import { IStoreState } from '../../reducer'
 import { EFontFamily, EFontColor, ELanguageEnv, ESystemTheme } from '../../reducer/main'
 import { ILoginResponse } from '../../http/user'
-import { getFontFamily, getFontColor } from '../../utils/font'
+import { getFontFamily, getFontColor, getThemeColor } from '../../utils/font'
 import localWithKey from '../../language'
 import SettingPanel from './component/settingPanel'
 import UserController from './component/userController'
@@ -48,7 +48,7 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
       this.setHighIndex(1)
       return
     }
-    this.setHighIndex(0)
+    this.setHighIndex(-1)
   }
 
   linkTo(path: string, idx: number) {
@@ -68,6 +68,15 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
     const wrap = this.loginPanel
     if (wrap && wrap.hide) {
       wrap.hide()
+    }
+  }
+
+  menuClick(path: string) {
+    if (path) {
+      instance.getValueByKey('history').push(path)
+      this.setState({ index : -1 })
+    } else {
+      this.signOutClick()
     }
   }
 
@@ -191,9 +200,12 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
     return (
       <div
         id="navbar"
-        style={{ fontFamily: getFontFamily(fontFamily) }}
+        style={{
+          fontFamily: getFontFamily(fontFamily),
+          background: getThemeColor(mode)
+        }}
       >
-        <div className="bar">
+        <div className="bar" >
           <i className="iconfont icon-yun logo" />
           <span
             onClick={() => this.linkTo('/', 0)}
@@ -224,10 +236,9 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
             fontColor={fontColor}
             language={language}
             mode={mode}
-            signOut={() => this.signOutClick()}
+            menuClick={(path) => this.menuClick(path)}
           />
         </div>
-        <div className="holder" />
       </div>
     )
   }

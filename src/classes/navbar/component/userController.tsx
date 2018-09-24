@@ -10,7 +10,7 @@ export interface IUserControllerProps {
   fontFamily: EFontFamily
   language: ELanguageEnv
   fontColor: EFontColor
-  signOut?: () => void
+  menuClick?: (path: string) => void
 }
 
 interface IUserControllerState {
@@ -50,6 +50,14 @@ export default class UserController extends React.Component<IUserControllerProps
     }
   }
   
+  pushTo(path: string) {
+    const { menuClick } = this.props
+    if (menuClick) {
+      menuClick(path)
+    }
+    this.hide()
+  }
+
   render() {
     const { visible } = this.state
     if (!visible) {
@@ -101,14 +109,19 @@ export default class UserController extends React.Component<IUserControllerProps
             style={{ color: getFontColor(fontColor)}}
           >{localWithKey(language, 'my-focus')}</span>
         </div>
-        <div className={cellClass}>
+        <div
+          className={cellClass}
+          onClick={() => this.pushTo('/s')}
+        >
           <i className="iconfont icon-shezhi icon" />
           <span
             className="menu-text"
             style={{ color: getFontColor(fontColor)}}
           >{localWithKey(language, 'setting')}</span>
         </div>
-        <div className={cellClass}>
+        <div
+          className={cellClass}
+        >
           <i className="iconfont icon-neibufankui icon" />
           <span
             className="menu-text"
@@ -117,12 +130,7 @@ export default class UserController extends React.Component<IUserControllerProps
         </div>
         <div
           className={cellClass}
-          onClick={() => {
-            const { signOut } = this.props
-            if (signOut) {
-              signOut()
-            }
-          }}
+          onClick={() => this.pushTo(undefined)}
         >
           <i className="iconfont icon-ai-out icon" />
           <span
