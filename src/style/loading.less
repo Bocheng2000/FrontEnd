@@ -1,0 +1,56 @@
+
+@keyframes loading {
+  0%{
+    width:60%
+  }
+  50%{
+    width:100%
+  }
+  to{
+    width:60%
+  }
+}
+
+@keyframes loading2 {
+  0%{
+    width:60%
+  }
+  50%{
+    width:100%
+  }
+  100%{
+    width:60%
+  }
+}
+
+@keyframes loading3 {
+  0%{
+    width:20%
+  }
+  50%{
+    width:40%
+  }
+  to{
+    width:20%
+  }
+}
+
+#loading {
+  .cell {
+    .transition;
+    height: 16px;
+    margin: 5px 0 15px;
+  }
+  .cell1 {
+    .cell;
+    animation: loading 1s ease-in-out infinite;
+  }
+  .cell2 {
+    .cell;
+    animation: loading2 1s ease-in-out -0.5s infinite
+  }
+  .cell3 {
+    .cell;
+    animation: loading3 1s ease-in-out infinite
+  }
+}

@@ -1,0 +1,146 @@
+
+#login {
+  .display;
+  justify-content: center;
+  align-items: flex-start;
+  background: #f1f1f1;
+  width: calc(100vw);
+  min-height: calc(100vh);
+  .logo {
+    position: absolute;
+    left: 60px;
+    top: 30px;
+    font-size: 60px;
+    color: #ea6f5a;
+  }
+  .mask {
+    background: #FFFFFF;
+    border-radius: 5px;
+    box-shadow: 0 0 8px rgba(0,0,0,.1);
+    width: 300px;
+    margin: 100px auto 0;
+    padding: 50px;
+    .text-area {
+      margin-top: 60px;
+      border: 1px solid #C8C8C8;
+      border-radius: 4px;
+      background: #F7F7F7;
+      .cell {
+        .display;
+        align-items: center;
+        flex: 1;
+        padding: 0 10px;
+        height: 50px;
+      }
+      .acc {
+        font-size: 18px;
+        color: #969696;
+      }
+      .base {
+        outline: none;
+        height: 90%;
+        flex: 1;
+        margin: 0 10px;
+        font-size: 15px;
+        border: none;
+        background: transparent;
+      }
+      .send-code {
+        .display;
+        width: 100px;
+        font-size: 13px;
+        color: #fff;
+        background-color: #42c02e;
+        height: 34px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 17px;
+      }
+      .send-code-able {
+        .send-code;
+        background: #48be39;
+        cursor: pointer;
+      }
+    }
+    .tools {
+      .display;
+      justify-content: space-between;
+      margin-top: 20px;
+      font-size: 14px;
+      .remember {
+        .display;
+        align-items: center;
+        color: #969696;
+        font-size: 15px;
+        .check {
+          margin-right: 5px;
+        }
+      }
+      .day {
+        cursor: pointer;
+        color: #969696;
+      }
+      .day:hover {
+        color: #333333;
+      }
+      .night {
+        cursor: pointer;
+        color: #969696;
+      }
+      .night:hover {
+        color: #ffffff;
+      }
+    }
+    .login-btn {
+      .display;
+      cursor: pointer;
+      color: #FFFFFF;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      height: 44px;
+      border-radius: 22px;
+      background: #3795CE;
+    }
+    .login-btn:hover {
+      background: #217db5;
+    }
+    .regist-btn {
+      .login-btn;
+      background: #48be39;
+    }
+    .regist-btn:hover {
+      background: #43b730;
+    }
+    .agree {
+      margin: 10px 0;
+      padding: 0;
+      text-align: center;
+      font-size: 12px;
+      line-height: 20px;
+      color: #969696;
+      .link {
+        color: #3194d0;
+      }
+    }
+  }
+}
+
+#signHeader {
+  text-align: center;
+  font-size: 18px;
+  .btn {
+    padding: 10px;
+    color: #969696;
+    cursor: pointer;
+  }
+  .high {
+    font-weight: 700;
+    color: #ea6f5a;
+    border-bottom: 2px solid #ea6f5a;
+  }
+  .point {
+    padding: 10px;
+    color: #969696;
+  }
+}

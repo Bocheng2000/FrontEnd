@@ -5,6 +5,7 @@ import { EFontFamily, EFontColor, ELanguageEnv, ESystemTheme } from '../../reduc
 import { IStoreState } from '../../reducer'
 import localWithKey from '../../language'
 import BaseSetting from './component/baseSetting'
+import PersonInfo from './component/PersonInfo'
 
 interface ISettingProps {
   fontFamily: EFontFamily
@@ -35,12 +36,12 @@ class Setting extends React.Component<ISettingProps, ISettingState> {
     const { language } = this.props
     return [
       {
-        icon: 'icon-yijicaidan',
-        title: localWithKey(language, 'base-setting'),
-      },
-      {
         icon: 'icon-ziliaoku',
         title: localWithKey(language, 'person-info'),
+      },
+      {
+        icon: 'icon-yijicaidan',
+        title: localWithKey(language, 'base-setting'),
       },
       {
         icon: 'icon-renminbi',
@@ -57,9 +58,11 @@ class Setting extends React.Component<ISettingProps, ISettingState> {
     const { index } = this.state
     switch (index) {
       case 0:
+        return <PersonInfo />
+      case 1:
         return <BaseSetting />
       default:
-      return <BaseSetting />
+        return null
     }
   }
 

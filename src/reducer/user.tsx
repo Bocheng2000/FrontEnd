@@ -1,5 +1,6 @@
 import { ILoginResponse } from '../http/user'
 import { IUpdateKeyValue } from '../action/user'
+import * as instance from '../utils/instance'
 
 export interface IUserState {
   info?: ILoginResponse
@@ -7,7 +8,12 @@ export interface IUserState {
 
 function getInfo() {
   const u = localStorage.getItem('user')
-  return u ? JSON.parse(u) : undefined
+  if (u) {
+    const json = JSON.parse(u)
+    instance.setValueByKey('info', json)
+    return json
+  }
+  return undefined
 }
 
 const initState: IUserState = {

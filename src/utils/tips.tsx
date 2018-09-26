@@ -5,7 +5,7 @@ export enum EShowTipsType {
   failed,
 }
 
-export function showTips(content: string, type: EShowTipsType, delay: number = 2000) {
+export function showTips(content: string, type: EShowTipsType = EShowTipsType.failed, delay: number = 2000) {
   const id = `tip${Date.now()}`
   let className
   if (type === EShowTipsType.success) {

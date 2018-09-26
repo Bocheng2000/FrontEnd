@@ -49,7 +49,9 @@ class Login extends React.Component<ILoginProps, ILoginState> {
   componentWillMount() {
     const user = localStorage.getItem('user')
     if (user) {
-      this.userAction.updateKeyValue('info', JSON.parse(user))
+      const json = JSON.parse(user)
+      this.userAction.updateKeyValue('info', json)
+      instance.setValueByKey('info', json)
       instance.getValueByKey('history').replace('/')
     }
   }
@@ -66,7 +68,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     login({ phone: phone, password: password }, (err, r) => {
       this.isLogin = false
       if (err) {
-        showTips(err, EShowTipsType.failed)
+        showTips(err)
       } else {
         if (remeber) {
           localStorage.setItem('phone', phone)

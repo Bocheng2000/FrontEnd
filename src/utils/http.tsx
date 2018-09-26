@@ -70,6 +70,25 @@ export function post(
     .catch(e => callback(e.message))
 }
 
+export function upload(
+  api: string,
+  sufix: string = "jpg",
+  buffer: Buffer,
+  callback: (err: string, result?: string) => void
+) {
+  _fetch(fetch(api, {
+    method: 'POST',
+    body: buffer,
+    headers: {
+      'Content-Type': 'octet-stream',
+      sufix,
+    },
+  }), timeout)
+  .then(r => (r as any).text())
+    .then(r => callback(undefined, r))
+    .catch(e => callback(e.message))
+}
+
 export function getHashUrl(hash: string): string {
   return `${storageApi}/storage/${hash}`
 }

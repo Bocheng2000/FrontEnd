@@ -1,0 +1,1 @@
+export const nameReg = /^[a-zA-Z0-9]{1,10}$/

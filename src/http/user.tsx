@@ -62,6 +62,23 @@ export interface ILoginResponse {
   whatIsUp: string
 }
 
+export interface IBaseAuth {
+  id: string
+  token: string
+}
+
+export interface IModifySensitiveParams extends IBaseAuth {
+  name?: string
+  whatIsUp?: string
+  avatar?: string
+  cover?: string
+}
+
+export interface IModifyBaseInfoParams extends IBaseAuth {
+  sex?: EUserSex
+  birthday?: string
+}
+
 /**
  * 登录
  * @param params 
@@ -117,4 +134,36 @@ export function create(
     else 
       callback(undefined, d[0] as ILoginResponse)
   })
+}
+
+/**
+ * 修改敏感信息
+ * @param params 
+ * @param callback 
+ */
+export function modifySensitive(
+  params: IModifySensitiveParams,
+  callback: (err: string) => void
+): void {
+  http.post(
+    postApi,
+    'User.ModifySensitive',
+    params,
+    callback)
+}
+
+/**
+ * 修改基本的信息
+ * @param params 
+ * @param callback 
+ */
+export function modifyBaseInfo(
+  params: IModifyBaseInfoParams,
+  callback: (err: string) => void
+): void {
+  http.post(
+    postApi,
+    'User.ModifyBaseInfo',
+    params,
+    callback)
 }

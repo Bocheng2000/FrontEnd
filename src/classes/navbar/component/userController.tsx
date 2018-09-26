@@ -5,7 +5,7 @@ import { getFontColor } from '../../../utils/font'
 import localWithKey from '../../../language'
 
 export interface IUserControllerProps {
-  ref?: (e: React.Component) => void
+  ref?: (e: UserController) => void
   mode: ESystemTheme
   fontFamily: EFontFamily
   language: ELanguageEnv

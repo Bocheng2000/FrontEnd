@@ -27,7 +27,7 @@ interface INavbarState {
 
 class Navbar extends React.Component<INavbarProps, INavbarState> {
   private settingPanel: any
-  private loginPanel: any
+  private loginPanel: UserController
   private userAction: typeof UserActions
 
   constructor(props: INavbarProps) {
@@ -111,6 +111,7 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
     localStorage.removeItem("phone")
     localStorage.removeItem("password")
     localStorage.removeItem("remeber")
+    localStorage.removeItem('info')
     instance.removeValueByKey('language')
     this.userAction.updateKeyValue('info', undefined)
     this.loginPanel.hide()

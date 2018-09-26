@@ -91,7 +91,7 @@ class Regist extends React.Component<IRegistProps, IRegistState> {
     const { limit, phone } = this.state
     const { language } = this.props
     if (!isPhone(phone)) {
-      showTips(localWithKey(language, 'number-illegal'), EShowTipsType.failed)
+      showTips(localWithKey(language, 'number-illegal'))
       return
     }
     if (limit === this.allLimit) {
@@ -100,7 +100,7 @@ class Regist extends React.Component<IRegistProps, IRegistState> {
         (err) => {
           this.isRequest = false
           if (err) {
-            showTips(err, EShowTipsType.failed)
+            showTips(err)
           } else {
             this.cutdown(limit)
           }
@@ -112,16 +112,16 @@ class Regist extends React.Component<IRegistProps, IRegistState> {
     const { phone, name, code, password } = this.state
     const { language } = this.props
     if (!name.trim().length) {
-      return showTips(localWithKey(language, 'input-name'), EShowTipsType.failed)
+      return showTips(localWithKey(language, 'input-name'))
     }
     if (!isPhone(phone)) {
-      return showTips(localWithKey(language, 'number-illegal'), EShowTipsType.failed)
+      return showTips(localWithKey(language, 'number-illegal'))
     }
     if (!code.trim().length) {
-      return showTips(localWithKey(language, 'input-code'), EShowTipsType.failed)
+      return showTips(localWithKey(language, 'input-code'))
     }
     if (!password.trim().length) {
-      return showTips(localWithKey(language, 'input-password'), EShowTipsType.failed)
+      return showTips(localWithKey(language, 'input-password'))
     }
     return this.toRegist()
   }
@@ -138,6 +138,7 @@ class Regist extends React.Component<IRegistProps, IRegistState> {
         const { language } = this.props
         showTips(localWithKey(language, 'register-success'), EShowTipsType.success)
         this.userAction.updateKeyValue('info', r)
+        instance.setValueByKey('info', r)
         localStorage.setItem('user', JSON.stringify(r))
         instance.getValueByKey('history').replace('/')
       }

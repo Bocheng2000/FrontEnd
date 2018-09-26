@@ -15,7 +15,7 @@ export default class Routers extends React.Component {
     return (
       <Router history={history}>
         <Switch>
-          <Route path="/404" component={NotFound} />
+          <Route path="/404" exact component={NotFound} />
           <Route path="/r" exact component={Regist} />
           <Route path="/l" exact component={Login} />
           <Route path="/" component={Main}/>

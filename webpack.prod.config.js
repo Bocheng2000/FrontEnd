@@ -1,12 +1,14 @@
 const merge = require('webpack-merge')
 var webpack = require('webpack')
-var CleanWebpackPlugin = require('clean-webpack-plugin');
+var CleanWebpackPlugin = require('clean-webpack-plugin')
 
 var base = require('./webpack.base.config')
 const prod = {
+	cache: false,
 	devtool: false,
 	plugins: [
 		new CleanWebpackPlugin(['dist/*.js']),
+		new webpack.optimize.ModuleConcatenationPlugin(),
 		new webpack.DefinePlugin({
 			'process.env': {
 				'NODE_ENV': JSON.stringify('production')
@@ -22,7 +24,7 @@ const prod = {
 					minChunks: 2,
 				},
 			}
-		}
+		},
 	}
 }
 module.exports = merge(base, prod)
