@@ -1,4 +1,4 @@
-import * as React from 'React'
+import * as React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch } from 'redux'
 import * as instance from '../../utils/instance'
@@ -113,6 +113,8 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
     localStorage.removeItem("remeber")
     localStorage.removeItem('info')
     instance.removeValueByKey('language')
+    instance.removeValueByKey('info')
+    instance.getValueByKey('history').replace('/')
     this.userAction.updateKeyValue('info', undefined)
     this.loginPanel.hide()
   }

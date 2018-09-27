@@ -70,7 +70,7 @@ class Setting extends React.Component<ISettingProps, ISettingState> {
     const { index } = this.state
     return this.generateMenus().map((e, i) => (
       <div
-        key={e.title}
+        key={e.icon}
         className={i === index ? `${className}-high` : className}
         onClick={() => {
           if (index !== i) {
@@ -89,7 +89,6 @@ class Setting extends React.Component<ISettingProps, ISettingState> {
 
   render() {
     const { fontFamily, fontColor, mode } = this.props
-    // const className = mode === ESystemTheme.day ? 'cell' : 'cell-night'
     const color = getFontColor(fontColor)
     let className
     let content

@@ -1,4 +1,4 @@
-import * as React from 'React'
+import * as React from 'react'
 import { EFontColor } from '../../reducer/main'
 
 export interface ISwitchData {

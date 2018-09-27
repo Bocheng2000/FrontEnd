@@ -1,7 +1,6 @@
 const merge = require('webpack-merge')
 var webpack = require('webpack')
 var CleanWebpackPlugin = require('clean-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 var base = require('./webpack.base.config')
 const prod = {

@@ -69,5 +69,17 @@
   "edit-cover": "编辑封面",
   "save-success": "保存成功",
   "support-number-char": "只支持数字,字母,数字和字母",
-  "date-legal": "日期不合法"
+  "date-legal": "日期不合法",
+  "verified": "已验证",
+  "un-bind": "解除绑定",
+  "rich-text": "富文本",
+  "mac-down": "Macdown",
+  "link-phone": "绑定手机",
+  "link-email": "绑定邮箱",
+  "cancel": "取消",
+  "continue": "继续",
+  "leak-credit": "余额不足",
+  "modify-idString-title": "修改ID提示!!",
+  "idString-init-content": "ID只能修改一次, 若还想继续修改, 则每次收取￥1费用",
+  "idString-changed-content": "您已修改过ID, 若继续修改ID, 将消费￥1. 是否继续?"
 }

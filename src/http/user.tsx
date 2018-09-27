@@ -2,7 +2,7 @@ import * as moment from 'moment'
 import * as md5 from 'js-md5'
 import * as http from '../utils/http'
 import { postApi } from '../utils/config'
-import { ELanguageEnv } from '../reducer/main'
+import { ELanguageEnv, ESystemTheme } from '../reducer/main'
 
 export interface ILoginParams {
   phone: string
@@ -47,6 +47,21 @@ export enum EUserState {
   FROZEN
 }
 
+export enum ESettingEditor {
+  RICHTEXT = 0,
+  MACDOWN
+}
+
+export enum ESettingReceive {
+  ALL = 0,
+  FOLLOW
+}
+
+export enum ESettingEmail {
+  ALL = 0,
+  REFUSE,
+}
+
 export interface ILoginResponse {
   avatar: string
   birthday: string
@@ -60,6 +75,17 @@ export interface ILoginResponse {
   token: string
   wallet: number
   whatIsUp: string
+}
+
+export interface ISettingResponse {
+  bindEmail: string
+  bindPhone: string
+  editor: ESettingEditor
+  emailNotice: ESettingEmail
+  language: ELanguageEnv
+  receiveNotice: ESettingReceive
+  theme: ESystemTheme
+  userId: string
 }
 
 export interface IBaseAuth {
@@ -77,6 +103,19 @@ export interface IModifySensitiveParams extends IBaseAuth {
 export interface IModifyBaseInfoParams extends IBaseAuth {
   sex?: EUserSex
   birthday?: string
+}
+
+export interface IUpdateSettingParams extends IBaseAuth {
+  editor?: ESettingEditor
+  language?: ELanguageEnv
+  theme?: ESystemTheme
+  receiveNotice?: ESettingReceive
+  emailNotice?: ESettingEmail
+}
+
+export interface IModifyIdStringParams extends IBaseAuth {
+  next: string
+  update: boolean
 }
 
 /**
@@ -166,4 +205,56 @@ export function modifyBaseInfo(
     'User.ModifyBaseInfo',
     params,
     callback)
+}
+
+/**
+ * 获取设置信息
+ * @param params 
+ * @param callback 
+ */
+export function findSetting(
+  params: IBaseAuth,
+  callback: (err: string, result?: ISettingResponse) => void
+): void {
+  http.post(postApi, 'User.MySetting', params, (err, data) => {
+    if (err) {
+      callback(err)
+    } else {
+      callback(undefined, data[0] as ISettingResponse)
+    }
+  })
+}
+
+/**
+ * 更新设置
+ * @param params 
+ * @param callback 
+ */
+export function updateSetting(
+  params: IUpdateSettingParams,
+  callback: (err: string) => void
+): void {
+  http.post(
+    postApi,
+    'User.UpdateSetting',
+    params,
+    callback
+  )
+}
+
+/**
+ * 修改IDString
+ * @param params 
+ * @param callback 
+ */
+export function modifyIdString(
+  params: IModifyIdStringParams,
+  callback: (err: string) => void
+): void {
+  http.post(
+    postApi,
+    'User.ModifyIdString',
+    params,
+    callback
+  )
 }

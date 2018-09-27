@@ -4,7 +4,7 @@ import DatePicker from 'antd/lib/date-picker'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch } from 'redux'
 import * as moment from 'moment'
-import { ILoginResponse } from '../../../http/user'
+import { ILoginResponse, EUserOnce } from '../../../http/user'
 import Loading from './loading'
 import { IStoreState } from '../../../reducer'
 import { ESystemTheme, ELanguageEnv, EFontColor, EFontFamily } from '../../../reducer/main'
@@ -17,8 +17,9 @@ import { showTips, EShowTipsType } from '../../../utils/tips'
 import { upload } from '../../../http/upload'
 import * as UserActions from '../../../action/user'
 import { getHashUrl } from '../../../utils/http'
-import { modifySensitive, modifyBaseInfo } from '../../../http/user'
+import { modifySensitive, modifyBaseInfo, modifyIdString } from '../../../http/user'
 import { nameReg } from '../../../utils/regex'
+import Confirm, { EConfirmTypes } from '../../component/confirm'
 
 const { Group } = Radio
 
@@ -38,6 +39,7 @@ interface IPersonInfoState {
 
 class PersonInfo extends React.Component<IPersonInfoProps, IPersonInfoState> {
   private editor: PicEditor
+  private confirm: Confirm
   private timer: any
   private userAction: typeof UserActions
 
@@ -53,7 +55,7 @@ class PersonInfo extends React.Component<IPersonInfoProps, IPersonInfoState> {
   componentWillMount() {
     const { info } = this.props
     if (!info) {
-      instance.getValueByKey('history').goBack()
+      instance.getValueByKey('history').replace('/')
     }
   }
 
@@ -145,7 +147,7 @@ class PersonInfo extends React.Component<IPersonInfoProps, IPersonInfoState> {
           } else {
             const { language } = this.props
             showTips(localWithKey(language, 'save-success'), EShowTipsType.success)
-            const { info } = this.state
+            const { info } = this.props
             this.updateInfo({
               ...info,
               [from]: hash,
@@ -163,7 +165,7 @@ class PersonInfo extends React.Component<IPersonInfoProps, IPersonInfoState> {
       } else {
         const { language } = this.props
         showTips(localWithKey(language, 'save-success'), EShowTipsType.success)
-        const { info } = this.state
+        const { info } = this.props
         this.updateInfo({
           ...info,
           ...params,
@@ -172,12 +174,62 @@ class PersonInfo extends React.Component<IPersonInfoProps, IPersonInfoState> {
     })
   }
 
-  modifyIdString(idString: string) {
+  toModifyIdString(idString: string, info: ILoginResponse) {
+    if (info.once == EUserOnce.CHANGED) {
+      if (info.wallet < 100) {
+        const { language } = this.props
+        showTips(localWithKey(language, 'leak-credit'))
+        return
+      }
+    }
+    modifyIdString({
+      id: info.id,
+      token: info.token,
+      next: idString,
+      update: true,
+    }, (err) => {
+      if (err) {
+        showTips(err)
+      } else {
+        const { language } = this.props
+        showTips(localWithKey(language, 'save-success'), EShowTipsType.success)
+        const { info } = this.props
+        this.updateInfo({
+          ...info,
+          idString,
+          once: EUserOnce.CHANGED,
+          wallet: info.once === EUserOnce.INIT ? info.wallet - 100 : info.wallet,
+        })
+      }
+    })
+  }
+
+  updateIdString(idString: string) {
+    const { language } = this.props
     if (!nameReg.test(idString)) {
-      const { language } = this.props
       showTips(localWithKey(language, 'support-number-char'))
       return
     }
+    const info = instance.getValueByKey('info') as ILoginResponse
+    let content
+    if (info.once === EUserOnce.INIT) {
+      content = localWithKey(language, 'idString-init-content')
+    } else {
+      content = localWithKey(language, 'idString-changed-content')
+    }
+    this.confirm.show({
+      fontFamily: this.props.fontFamily,
+      type: EConfirmTypes.CONFIRM,
+      title: localWithKey(language, 'modify-idString-title'),
+      content,
+      cancel: {
+        title: localWithKey(language, 'cancel')
+      },
+      ok: {
+        title: localWithKey(language, 'continue'),
+        handler: () => this.toModifyIdString(idString, info),
+      }
+    })
   }
 
   saveBase(params: any) {
@@ -187,7 +239,7 @@ class PersonInfo extends React.Component<IPersonInfoProps, IPersonInfoState> {
       } else {
         const { language } = this.props
         showTips(localWithKey(language, 'save-success'), EShowTipsType.success)
-        const { info } = this.state
+        const { info } = this.props
         this.updateInfo({
           ...info,
           ...params,
@@ -253,14 +305,7 @@ class PersonInfo extends React.Component<IPersonInfoProps, IPersonInfoState> {
               (
                 <span
                   className={`change ${config.changeClass}`}
-                  onClick={() => {
-                    const nextName = info.name.trim()
-                    if (!nameReg.test(nextName)) {
-                      showTips(localWithKey(language, 'support-number-char'))
-                      return
-                    }
-                    this.saveInfo({ name: info.name.trim() })
-                  }}
+                  onClick={() => this.saveInfo({ name: info.name.trim() })}
                   style={{ marginLeft: '10px' }}
                 >
                   {localWithKey(language, 'save')}
@@ -290,7 +335,7 @@ class PersonInfo extends React.Component<IPersonInfoProps, IPersonInfoState> {
             (
               <span
                 className={`change ${config.changeClass}`}
-                onClick={() => this.modifyIdString(info.idString.trim())}
+                onClick={() => this.updateIdString(info.idString.trim())}
                 style={{ marginLeft: '10px' }}
               >
                 {localWithKey(language, 'save')}
@@ -320,7 +365,7 @@ class PersonInfo extends React.Component<IPersonInfoProps, IPersonInfoState> {
                 className={`change ${config.changeClass}`}
                 style={{ marginLeft: '10px' }}
                 onClick={() => {
-                  this.saveInfo({ whatIsUp: info.whatIsUp.trim()})
+                  this.saveInfo({ whatIsUp: info.whatIsUp.trim() })
                 }}
               >
                 {localWithKey(language, 'save')}
@@ -460,6 +505,7 @@ class PersonInfo extends React.Component<IPersonInfoProps, IPersonInfoState> {
           onChange={(e) => this.toPickerFile(e)}
         />
         <PicEditor ref={(e) => { this.editor = e }} />
+        <Confirm ref={(e) => { this.confirm = e }} />
       </div>
     )
   }
