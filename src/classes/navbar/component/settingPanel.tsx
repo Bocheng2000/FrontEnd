@@ -1,7 +1,6 @@
 import * as React from 'React'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch } from 'redux'
-import * as $ from 'jquery'
 import * as MainActions from '../../../action/main'
 import SwitchBtn from '../../component/SwitchBtn'
 import { EFontColor, ESystemTheme, ELanguageEnv, EFontFamily } from '../../../reducer/main'
@@ -41,7 +40,7 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
       if (!visible) {
         this.setState({ visible: true })
         setTimeout(() => {
-          $('#setting-panel').css('opacity', "1")
+          document.getElementById('setting-panel').style.opacity = "1"
         }, 100)
       }
     }
