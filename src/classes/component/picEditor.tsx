@@ -3,30 +3,29 @@ import Modal from 'antd/lib/modal'
 import Slider from 'antd/lib/Slider'
 import Editor from 'react-avatar-editor'
 import * as instance from '../../utils/instance'
-import { ELanguageEnv } from '../../reducer/main'
+import { ELanguageEnv, ESystemTheme, EFontFamily } from '../../reducer/main'
 import localWithKey from '../../language'
+import { getFontFamily } from '../../utils/font'
 
 export interface IPicEditorProps {
   ref?: (e: PicEditor) => void;
 }
 
-export interface IPicEditorState {
-  visible: boolean
+export interface IPicEditorShowProps {
+  fontFamily?: EFontFamily
+  mode?: ESystemTheme
   image: string
   width: number
   height: number
   showRadius?: boolean
-  scale: number
-  rotate: number
-  radius: number
   handler?: (err: string, result?: string) => void
 }
 
-export interface IPicEditorShowProps {
-  image: string
-  width: number
-  height: number
-  showRadius?: boolean
+export interface IPicEditorState extends IPicEditorShowProps {
+  visible: boolean
+  scale: number
+  rotate: number
+  radius: number
   handler?: (err: string, result?: string) => void
 }
 
@@ -90,14 +89,10 @@ class PicEditor extends React.Component<IPicEditorProps, IPicEditorState>  {
   public show(params: IPicEditorShowProps) {
     this.setState({
       visible: true,
-      image: params.image,
-      width: params.width,
-      height: params.height,
-      handler: params.handler,
-      showRadius: params.showRadius,
       scale: 1,
       rotate: 0,
       radius: 0,
+      ...params,
     })
   }
 
@@ -114,14 +109,39 @@ class PicEditor extends React.Component<IPicEditorProps, IPicEditorState>  {
     })
   }
 
+  private getConfig() {
+    const { mode } = this.state
+    let config
+    if (mode === ESystemTheme.night) {
+      config = {
+        mask: 'base-model-night',
+        color: '#C8C8C8',
+        border: '1px solid #2F2F2F'
+      }
+    } else {
+      config = {
+        mask: 'base-model-day',
+        color: '#333333',
+        border: '1px solid #DDDDDD'
+      }
+    }
+    return config
+  }
+
+
   render() {
-    const { visible, image, showRadius, width, height, scale, rotate, radius } = this.state
+    const { visible, image, showRadius, width,
+      height, scale, rotate, radius, fontFamily,
+      mode,
+    } = this.state
     if (!visible) {
       return null
     }
     const language = instance.getValueByKey('language') as ELanguageEnv
+    const config = this.getConfig()
     return (
       <Modal
+        className={config.mask}
         title={null} centered
         maskClosable={false}
         closable={false}
@@ -129,83 +149,85 @@ class PicEditor extends React.Component<IPicEditorProps, IPicEditorState>  {
         footer={null}
         width={width + 20}
       >
-        <div className="pic-edit-header">
-          <span className="pic-edit-title">
-            {localWithKey(language, 'picture-crop')}
-          </span>
-          <i
-            className="iconfont icon-guanbi pic-edit-close"
-            onClick={() => this.hide()}
-          />
-        </div>
-        <Editor
-          crossOrigin="anonymous"
-          ref={(e) => { this.editor = e }}
-          image={image}
-          width={width}
-          style={{ border: '1px solid #dddddd' }}
-          height={height}
-          border={0}
-          borderRadius={radius}
-          color={[0, 0, 0, 0.6]}
-          scale={scale}
-          rotate={rotate}
-        />
-        <div className="pic-edit-tool">
-          {
-            width === height && showRadius ?
-              (
-                <div className="cell">
-                  <span className="tag">
-                    {localWithKey(language, 'picture-radius')}
-                  </span>
-                  <Slider
-                    min={0}
-                    max={Math.max(width, height) / 2}
-                    step={1}
-                    value={radius}
-                    tipFormatter={e => `${localWithKey(language, 'picture-radius')} ${e}`}
-                    onChange={e => this.setState({ radius: Number(e) })}
-                  />
-                </div>
-              ) : null
-          }
-          {
-            width === height ?
-              (
-                <div className="cell">
-                  <span className="tag">
-                    {localWithKey(language, 'picture-rotate')}
-                  </span>
-                  <Slider
-                    min={0}
-                    max={360}
-                    step={1}
-                    value={rotate}
-                    tipFormatter={e => `${localWithKey(language, 'picture-rotate')} ${e} deg`}
-                    onChange={e => this.setState({ rotate: Number(e) })}
-                  />
-                </div>
-              ) : null
-          }
-          <div className="cell">
-            <span className="tag">
-              {localWithKey(language, 'picture-scale')}
+        <div style={{ fontFamily: getFontFamily(fontFamily) }}>
+          <div className="pic-edit-header">
+            <span className="pic-edit-title" style={{ color: config.color }}>
+              {localWithKey(language, 'picture-crop')}
             </span>
-            <Slider
-              min={0.5}
-              max={2}
-              step={0.1}
-              tipFormatter={e => `${localWithKey(language, 'picture-scale')} ${e}`}
-              value={scale}
-              onChange={e => this.setState({ scale: Number(e) })}
+            <i
+              className="iconfont icon-guanbi pic-edit-close"
+              onClick={() => this.hide()}
             />
-            <span
-              className="done"
-              onClick={() => this.doneBtnDidClick()}
-            >
-              {localWithKey(language, 'done')}
-            </span>
+          </div>
+          <Editor
+            crossOrigin="anonymous"
+            ref={(e) => { this.editor = e }}
+            image={image}
+            width={width}
+            style={{ border: config.border }}
+            height={height}
+            border={0}
+            borderRadius={radius}
+            color={[0, 0, 0, 0.6]}
+            scale={scale}
+            rotate={rotate}
+          />
+          <div className="pic-edit-tool">
+            {
+              width === height && showRadius ?
+                (
+                  <div className="cell">
+                    <span className="tag" style={{ color: config.color }}>
+                      {localWithKey(language, 'picture-radius')}
+                    </span>
+                    <Slider
+                      min={0}
+                      max={Math.max(width, height) / 2}
+                      step={1}
+                      value={radius}
+                      tipFormatter={e => `${localWithKey(language, 'picture-radius')} ${e}`}
+                      onChange={e => this.setState({ radius: Number(e) })}
+                    />
+                  </div>
+                ) : null
+            }
+            {
+              width === height ?
+                (
+                  <div className="cell">
+                    <span className="tag" style={{ color: config.color }}>
+                      {localWithKey(language, 'picture-rotate')}
+                    </span>
+                    <Slider
+                      min={0}
+                      max={360}
+                      step={1}
+                      value={rotate}
+                      tipFormatter={e => `${localWithKey(language, 'picture-rotate')} ${e} deg`}
+                      onChange={e => this.setState({ rotate: Number(e) })}
+                    />
+                  </div>
+                ) : null
+            }
+            <div className="cell">
+              <span className="tag" style={{ color: config.color }}>
+                {localWithKey(language, 'picture-scale')}
+              </span>
+              <Slider
+                min={0.5}
+                max={2}
+                step={0.1}
+                tipFormatter={e => `${localWithKey(language, 'picture-scale')} ${e}`}
+                value={scale}
+                onChange={e => this.setState({ scale: Number(e) })}
+              />
+              <span
+                className="done"
+                onClick={() => this.doneBtnDidClick()}
+              >
+                {localWithKey(language, 'done')}
+              </span>
+            </div>
           </div>
         </div>
       </Modal>

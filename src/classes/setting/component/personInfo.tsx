@@ -121,6 +121,8 @@ class PersonInfo extends React.Component<IPersonInfoProps, IPersonInfoState> {
         }
       }
       this.editor.show({
+        mode: this.props.mode,
+        fontFamily: this.props.fontFamily,
         image: (e.target as any).result,
         ...wh,
         handler: (err, result) => {
@@ -205,7 +207,7 @@ class PersonInfo extends React.Component<IPersonInfoProps, IPersonInfoState> {
   }
 
   updateIdString(idString: string) {
-    const { language } = this.props
+    const { language, fontFamily, mode } = this.props
     if (!nameReg.test(idString)) {
       showTips(localWithKey(language, 'support-number-char'))
       return
@@ -218,7 +220,8 @@ class PersonInfo extends React.Component<IPersonInfoProps, IPersonInfoState> {
       content = localWithKey(language, 'idString-changed-content')
     }
     this.confirm.show({
-      fontFamily: this.props.fontFamily,
+      mode,
+      fontFamily,
       type: EConfirmTypes.CONFIRM,
       title: localWithKey(language, 'modify-idString-title'),
       content,
