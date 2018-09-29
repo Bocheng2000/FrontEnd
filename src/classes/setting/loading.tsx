@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ESystemTheme } from '../../../reducer/main'
+import { ESystemTheme } from '../../reducer/main'
 
 export interface ILoadingProps {
   mode?: ESystemTheme

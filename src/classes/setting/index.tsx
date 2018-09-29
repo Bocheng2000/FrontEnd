@@ -4,8 +4,8 @@ import { getFontFamily, getFontColor } from '../../utils/font'
 import { EFontFamily, EFontColor, ELanguageEnv, ESystemTheme } from '../../reducer/main'
 import { IStoreState } from '../../reducer'
 import localWithKey from '../../language'
-import BaseSetting from './component/baseSetting'
-import PersonInfo from './component/PersonInfo'
+import BaseSetting from './baseSetting'
+import PersonInfo from './personInfo'
 
 interface ISettingProps {
   fontFamily: EFontFamily

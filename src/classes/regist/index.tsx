@@ -7,11 +7,12 @@ import { IStoreState } from '../../reducer'
 import { EFontFamily, EFontColor, ELanguageEnv, ESystemTheme} from '../../reducer/main'
 import localWithKey from '../../language'
 import { getFontFamily } from '../../utils/font'
-import { isPhone } from '../../utils/utils'
+import { isPhone, isCode } from '../../utils/utils'
 import { showTips, EShowTipsType } from '../../utils/tips'
 import { sendCode, ESendCodeType, create } from '../../http/user'
 import * as UserActions from '../../action/user'
 import * as instance from '../../utils/instance'
+import { code_all } from '../../utils/config'
 
 interface IRegistProps {
   fontFamily: EFontFamily;
@@ -30,7 +31,7 @@ interface IRegistState {
 }
 
 class Regist extends React.Component<IRegistProps, IRegistState> {
-  private allLimit: number = 10
+  private allLimit: number = code_all
   private isRequest: boolean = false
   private userAction: typeof UserActions
   private timer: any
@@ -117,8 +118,8 @@ class Regist extends React.Component<IRegistProps, IRegistState> {
     if (!isPhone(phone)) {
       return showTips(localWithKey(language, 'number-illegal'))
     }
-    if (!code.trim().length) {
-      return showTips(localWithKey(language, 'input-code'))
+    if (!isCode(code)) {
+      return showTips(localWithKey(language, 'code-illegal'))
     }
     if (!password.trim().length) {
       return showTips(localWithKey(language, 'input-password'))

@@ -20,11 +20,11 @@ module.exports = {
   },
   devtool: "source-map",
   performance: {
-    hints: "warning", // 枚举
-    maxAssetSize: 30000000, // 整数类型（以字节为单位）
-    maxEntrypointSize: 50000000, // 整数类型（以字节为单位）
+    hints: "warning",
+    maxAssetSize: 30000000,
+    maxEntrypointSize: 50000000,
     assetFilter: function (assetFilename) {
-      return assetFilename.endsWith('.css') || assetFilename.endsWith('.js');
+      return assetFilename.endsWith('.css') || assetFilename.endsWith('.js')
     }
   },
   resolve: {
@@ -69,4 +69,4 @@ module.exports = {
 
   plugins: [
   ],
-};
+}

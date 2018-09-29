@@ -2,18 +2,18 @@ import * as React from 'react'
 import Modal from 'antd/lib/modal'
 import Slider from 'antd/lib/Slider'
 import Editor from 'react-avatar-editor'
-import * as instance from '../../utils/instance'
 import { ELanguageEnv, ESystemTheme, EFontFamily } from '../../reducer/main'
 import localWithKey from '../../language'
 import { getFontFamily } from '../../utils/font'
 
 export interface IPicEditorProps {
   ref?: (e: PicEditor) => void;
+  fontFamily?: EFontFamily
+  mode?: ESystemTheme
+  language?: ELanguageEnv
 }
 
 export interface IPicEditorShowProps {
-  fontFamily?: EFontFamily
-  mode?: ESystemTheme
   image: string
   width: number
   height: number
@@ -110,7 +110,7 @@ class PicEditor extends React.Component<IPicEditorProps, IPicEditorState>  {
   }
 
   private getConfig() {
-    const { mode } = this.state
+    const { mode } = this.props
     let config
     if (mode === ESystemTheme.night) {
       config = {
@@ -131,16 +131,16 @@ class PicEditor extends React.Component<IPicEditorProps, IPicEditorState>  {
 
   render() {
     const { visible, image, showRadius, width,
-      height, scale, rotate, radius, fontFamily,
-      mode,
+      height, scale, rotate, radius,
     } = this.state
     if (!visible) {
       return null
     }
-    const language = instance.getValueByKey('language') as ELanguageEnv
+    const { fontFamily, language } = this.props
     const config = this.getConfig()
     return (
       <Modal
+        zIndex={10}
         className={config.mask}
         title={null} centered
         maskClosable={false}

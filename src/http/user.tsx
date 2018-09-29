@@ -118,6 +118,16 @@ export interface IModifyIdStringParams extends IBaseAuth {
   update: boolean
 }
 
+export interface IBindPhoneParams extends IBaseAuth {
+  phone: string
+  code: number
+}
+
+export interface IBindEmailParams extends IBaseAuth {
+  email: string
+  code: number
+}
+
 /**
  * 登录
  * @param params 
@@ -149,9 +159,19 @@ export function sendCode (
   params: ISendCodeParams,
   callback: (err: string) => void,
 ): void {
-  http.post(postApi, 'Code.SendCode', params, (err) => {
-    callback(err)
-  })
+  http.post(postApi, 'Code.SendCode', params, callback)
+}
+
+/**
+ * 发送邮箱验证码
+ * @param params 
+ * @param callback 
+ */
+export function sendEmailCode(
+  params: ISendCodeParams,
+  callback: (err: string) => void
+): void {
+  http.post(postApi, 'Code.EmailSendCode', params, callback )
 }
 
 /**
@@ -257,4 +277,28 @@ export function modifyIdString(
     params,
     callback
   )
+}
+
+/**
+ * 绑定手机号
+ * @param params 
+ * @param callback 
+ */
+export function bindPhone(
+  params: IBindPhoneParams,
+  callback: (err: string) => void
+): void {
+  http.post(postApi, 'User.BindPhone', params, callback)
+}
+
+/**
+ * 绑定邮箱
+ * @param parmas 
+ * @param callback 
+ */
+export function bindEmail(
+  parmas: IBindEmailParams,
+  callback: (err: string) => void
+): void {
+  http.post(postApi, 'User.BindEmail', parmas, callback)
 }

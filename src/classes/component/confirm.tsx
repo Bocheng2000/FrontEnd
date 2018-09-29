@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Modal from 'antd/lib/modal'
-import { ELanguageEnv, EFontFamily, ESystemTheme } from '../../reducer/main'
+import { EFontFamily, ESystemTheme } from '../../reducer/main'
 import { getFontFamily } from '../../utils/font'
 
 export enum EConfirmTypes {
@@ -19,8 +19,6 @@ export interface IConfirmButton {
 
 export interface IConfirmParams {
   ref?: (e: Confirm) => void
-  mode?: ESystemTheme
-  fontFamily?: EFontFamily
   type: EConfirmTypes
   title: string
   content: string
@@ -32,8 +30,14 @@ interface IConfirmState extends IConfirmParams {
   visible: boolean
 }
 
-export default class Confirm extends React.Component<{}, IConfirmState> {
-  constructor(props: object) {
+export interface IConfirmProps {
+  mode?: ESystemTheme
+  fontFamily?: EFontFamily
+  ref: (e: Confirm) => void
+}
+
+export default class Confirm extends React.Component<IConfirmProps, IConfirmState> {
+  constructor(props: IConfirmProps) {
     super(props)
     this.state = {
       visible: false,
@@ -66,22 +70,22 @@ export default class Confirm extends React.Component<{}, IConfirmState> {
   private renderIcon(type: EConfirmTypes) {
     switch (type) {
       case EConfirmTypes.INFO:
-        return <i className="iconfont icon-infoo icon" />
+        return <i className="iconfont icon-infoo icon info" />
       case EConfirmTypes.SUCCESS:
-        return <i className="iconfont icon-miaojiesellersuccessbig icon" />
+        return <i className="iconfont icon-miaojiesellersuccessbig icon succ" />
       case EConfirmTypes.ERROR:
-        return <i className="iconfont icon-errorsign icon" />
+        return <i className="iconfont icon-errorsign icon err" />
       case EConfirmTypes.WARNING:
-        return <i className="iconfont icon-warning-circle icon" />
+        return <i className="iconfont icon-warning-circle icon warning" />
       case EConfirmTypes.DELETE:
-        return <i className="iconfont icon-ask icon" />
+        return <i className="iconfont icon-ask icon del" />
       default:
-        return <i className="iconfont icon-ask icon" />
+        return <i className="iconfont icon-ask icon ask" />
     }
   }
 
   private getConfig() {
-    const { mode } = this.state
+    const { mode } = this.props
     let config
     if (mode === ESystemTheme.night) {
       config = {
@@ -98,13 +102,15 @@ export default class Confirm extends React.Component<{}, IConfirmState> {
   }
 
   render() {
-    const { visible, fontFamily, type, title, content, cancel, ok } = this.state
+    const { visible, type, title, content, cancel, ok } = this.state
     if (!visible) {
       return null
     }
+    const { fontFamily } = this.props
     const config = this.getConfig()
     return (
       <Modal
+        zIndex={10}
         className={config.mask}
         style={{ top: 120 }}
         title={null}

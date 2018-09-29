@@ -2,16 +2,17 @@ import * as React from 'react'
 import Radio from 'antd/lib/radio'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch } from 'redux'
-import { animate_delay } from '../../../utils/config'
-import { ILoginResponse, ISettingResponse, findSetting, updateSetting, ESettingEditor } from '../../../http/user'
+import { animate_delay } from '../../utils/config'
+import { ILoginResponse, ISettingResponse, findSetting, updateSetting, ESettingEditor } from '../../http/user'
 import Loading from './loading'
-import { IStoreState } from '../../../reducer'
-import { ESystemTheme, ELanguageEnv, EFontColor, EFontFamily } from '../../../reducer/main'
-import localWithKey from '../../../language'
-import { getFontColor, getFontFamily } from '../../../utils/font'
-import * as instance from '../../../utils/instance'
-import { showTips, EShowTipsType } from '../../../utils/tips'
-import * as UserActions from '../../../action/user'
+import { IStoreState } from '../../reducer'
+import { ESystemTheme, ELanguageEnv, EFontColor, EFontFamily } from '../../reducer/main'
+import localWithKey from '../../language'
+import { getFontColor, getFontFamily } from '../../utils/font'
+import * as instance from '../../utils/instance'
+import { showTips, EShowTipsType } from '../../utils/tips'
+import * as UserActions from '../../action/user'
+import Relink, { ERelinkType } from './component/reLink'
 
 const { Group } = Radio
 
@@ -32,6 +33,7 @@ interface IBaseSettingState {
 
 class BaseSetting extends React.Component<IBaseSettingProps, IBaseSettingState> {
   private timer: any
+  private reLink: Relink
   private userAction: typeof UserActions
 
   constructor(props: IBaseSettingProps) {
@@ -104,6 +106,17 @@ class BaseSetting extends React.Component<IBaseSettingProps, IBaseSettingState> 
     this.setState({ setting:  { ...setting, ...params }})
   }
 
+  showBindModal(type: ERelinkType) {
+    this.reLink.show(type, (val) => {
+      const { setting } = this.state
+      const nextSetting = {
+        ...setting,
+        [type === ERelinkType.PHONE ? 'bindPhone': 'bindEmail']: val
+      }
+      this.setState({ setting: nextSetting })
+    })
+  }
+
   renderPhone(language: ELanguageEnv, config: any, color: string) {
     const { setting } = this.state
     return (
@@ -123,13 +136,19 @@ class BaseSetting extends React.Component<IBaseSettingProps, IBaseSettingState> 
                 <span className="verificate">
                   {localWithKey(language, 'verified')}
                 </span>
-                <span className={`unbind ${config.unbind}`}>
-                  {localWithKey(language, 'un-bind')}
+                <span
+                  className={`unbind ${config.unbind}`}
+                  onClick={() => this.showBindModal(ERelinkType.PHONE)}
+                >
+                  {localWithKey(language, 're-bind')}
                 </span>
               </div>
             ) :
             (
-              <span className={`change ${config.changeClass}`}>
+              <span
+                className={`change ${config.changeClass}`}
+                onClick={() => this.showBindModal(ERelinkType.PHONE)}
+              >
                 {localWithKey(language, 'link-phone')}
               </span>
             )
@@ -157,12 +176,18 @@ class BaseSetting extends React.Component<IBaseSettingProps, IBaseSettingState> 
                 <span className="verificate">
                   {localWithKey(language, 'verified')}
                 </span>
-                <span className={`unbind ${config.unbind}`}>
-                  {localWithKey(language, 'un-bind')}
+                <span
+                  className={`unbind ${config.unbind}`}
+                  onClick={() => this.showBindModal(ERelinkType.EMAIL)}
+                >
+                  {localWithKey(language, 're-bind')}
                 </span>
               </div>
             ) : (
-              <span className={`change ${config.changeClass}`}>
+              <span
+                className={`change ${config.changeClass}`}
+                onClick={() => this.showBindModal(ERelinkType.EMAIL)}
+              >
                 {localWithKey(language, 'link-email')}
               </span>
             )
@@ -339,6 +364,12 @@ class BaseSetting extends React.Component<IBaseSettingProps, IBaseSettingState> 
         {this.renderLanguage(language, config, color, family)}
         {this.renderReceiveNotice(language, config, color, family)}
         {this.renderEmailNotice(language, config, color, family)}
+        <Relink
+          ref={(e) => { this.reLink = e }}
+          mode={mode}
+          language={language}
+          fontFamily={fontFamily}
+        />
       </div>
     )
   }

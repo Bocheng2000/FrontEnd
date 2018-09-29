@@ -4,22 +4,22 @@ import DatePicker from 'antd/lib/date-picker'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch } from 'redux'
 import * as moment from 'moment'
-import { ILoginResponse, EUserOnce } from '../../../http/user'
+import { ILoginResponse, EUserOnce } from '../../http/user'
 import Loading from './loading'
-import { IStoreState } from '../../../reducer'
-import { ESystemTheme, ELanguageEnv, EFontColor, EFontFamily } from '../../../reducer/main'
-import PicEditor from '../../component/picEditor'
-import localWithKey from '../../../language'
-import { getFontColor, getFontFamily } from '../../../utils/font'
-import * as instance from '../../../utils/instance'
-import { cover_h, cover_w, avatar_h, avatar_w, animate_delay } from '../../../utils/config'
-import { showTips, EShowTipsType } from '../../../utils/tips'
-import { upload } from '../../../http/upload'
-import * as UserActions from '../../../action/user'
-import { getHashUrl } from '../../../utils/http'
-import { modifySensitive, modifyBaseInfo, modifyIdString } from '../../../http/user'
-import { nameReg } from '../../../utils/regex'
-import Confirm, { EConfirmTypes } from '../../component/confirm'
+import { IStoreState } from '../../reducer'
+import { ESystemTheme, ELanguageEnv, EFontColor, EFontFamily } from '../../reducer/main'
+import PicEditor from '../component/picEditor'
+import localWithKey from '../../language'
+import { getFontColor, getFontFamily } from '../../utils/font'
+import * as instance from '../../utils/instance'
+import { cover_h, cover_w, avatar_h, avatar_w, animate_delay } from '../../utils/config'
+import { showTips, EShowTipsType } from '../../utils/tips'
+import { upload } from '../../http/upload'
+import * as UserActions from '../../action/user'
+import { getHashUrl } from '../../utils/http'
+import { modifySensitive, modifyBaseInfo, modifyIdString } from '../../http/user'
+import { nameReg } from '../../utils/regex'
+import Confirm, { EConfirmTypes } from '../component/confirm'
 
 const { Group } = Radio
 
@@ -121,8 +121,6 @@ class PersonInfo extends React.Component<IPersonInfoProps, IPersonInfoState> {
         }
       }
       this.editor.show({
-        mode: this.props.mode,
-        fontFamily: this.props.fontFamily,
         image: (e.target as any).result,
         ...wh,
         handler: (err, result) => {
@@ -220,8 +218,6 @@ class PersonInfo extends React.Component<IPersonInfoProps, IPersonInfoState> {
       content = localWithKey(language, 'idString-changed-content')
     }
     this.confirm.show({
-      mode,
-      fontFamily,
       type: EConfirmTypes.CONFIRM,
       title: localWithKey(language, 'modify-idString-title'),
       content,
@@ -507,8 +503,17 @@ class PersonInfo extends React.Component<IPersonInfoProps, IPersonInfoState> {
           accept="image/*"
           onChange={(e) => this.toPickerFile(e)}
         />
-        <PicEditor ref={(e) => { this.editor = e }} />
-        <Confirm ref={(e) => { this.confirm = e }} />
+        <PicEditor
+          ref={(e) => { this.editor = e }}
+          mode={mode}
+          fontFamily={fontFamily}
+          language={language}
+        />
+        <Confirm
+          ref={(e) => { this.confirm = e }}
+          mode={mode}
+          fontFamily={fontFamily}
+        />
       </div>
     )
   }

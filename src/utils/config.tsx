@@ -6,4 +6,5 @@ export const cover_h: number = 300
 export const avatar_w: number = 200
 export const avatar_h: number = 200
 
+export const code_all: number = 120
 export const animate_delay: number = 500
