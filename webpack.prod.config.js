@@ -9,6 +9,8 @@ const prod = {
 	plugins: [
 		new CleanWebpackPlugin(['dist/*.js']),
 		new webpack.optimize.ModuleConcatenationPlugin(),
+		new webpack.optimize.OccurrenceOrderPlugin(),
+		new webpack.NoEmitOnErrorsPlugin(),
 		new webpack.DefinePlugin({
 			'process.env': {
 				'NODE_ENV': JSON.stringify('production')

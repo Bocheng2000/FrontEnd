@@ -222,7 +222,7 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
             className={index === 1 ? "buttonHigh" : mode === ESystemTheme.day ? "button button-day" : " button button-night"}
             style={{ color: index === 1 ? '#ea6f5a' : getFontColor(fontColor) }}
           >
-            {localWithKey(language, 'topic')}
+            {localWithKey(language, 'special')}
           </span>
           {this.renderSearchBar()}
           {this.renderMenus()}

@@ -4,6 +4,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 const base = require('./webpack.base.config')
 const dev = {
+  devtool: "source-map",
   devServer: {
     hot: true,
     publicPath: '/dist/',

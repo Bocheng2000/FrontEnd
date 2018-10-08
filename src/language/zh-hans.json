@@ -1,6 +1,6 @@
 {
   "home": "首页",
-  "topic": "话题",
+  "special": "专题",
   "search": "搜索",
   "login": "登录",
   "register": "注册",
@@ -86,5 +86,7 @@
   "idString-changed-content": "您已修改过ID, 若继续修改ID, 将消费￥1. 是否继续?",
   "input-phone": "请输入你的常用手机号",
   "input-email": "请输入你的常用邮箱",
-  "link": "立即绑定"
+  "link": "立即绑定",
+  "more-special": "更多热门专题",
+  "load-more": "加载更多"
 }

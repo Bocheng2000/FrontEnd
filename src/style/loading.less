@@ -35,22 +35,76 @@
   }
 }
 
+@keyframes typing {
+  0% {
+    background-color: rgba(234, 111, 90, 1);
+    box-shadow: 24px 0px 0px 0px rgba(234, 111, 90, 0.2), 48px 0px 0px 0px rgba(234, 111, 90, 0.2);
+  }
+
+  25% {
+    background-color: rgba(234, 111, 90, 0.4);
+    box-shadow: 24px 0px 0px 0px rgba(234, 111, 90, 1), 48px 0px 0px 0px rgba(234, 111, 90, 0.2);
+  }
+
+  75% {
+    background-color: rgba(234, 111, 90, 0.4);
+    box-shadow: 24px 0px 0px 0px rgba(234, 111, 90, 0.2), 48px 0px 0px 0px rgba(234, 111, 90, 1);
+  }
+}
+
 #loading {
-  .cell {
-    .transition;
-    height: 16px;
-    margin: 5px 0 15px;
+  display: flex;
+  align-items: center;
+  .item {
+    flex: 1;
+    .cell {
+      .transition;
+      height: 16px;
+      margin: 5px 0 15px;
+    }
+    .cell1 {
+      .cell;
+      animation: loading 1s ease-in-out infinite;
+    }
+    .cell2 {
+      .cell;
+      animation: loading2 1s ease-in-out -0.5s infinite
+    }
+    .cell3 {
+      .cell;
+      animation: loading3 1s ease-in-out infinite
+    }
+    .cell-tools {
+      transition: all ease 0.3s;
+      height: 16px;
+      margin: 5px 0 15px;
+      display: flex;
+      .i {
+        width: 50px;
+        height: 100%;
+        margin-right: 10px;
+      }
+    }
   }
-  .cell1 {
-    .cell;
-    animation: loading 1s ease-in-out infinite;
+  .cell-image {
+    width: 125px;
+    height: 110px;
+    margin-left: 10px;
   }
-  .cell2 {
-    .cell;
-    animation: loading2 1s ease-in-out -0.5s infinite
-  }
-  .cell3 {
-    .cell;
-    animation: loading3 1s ease-in-out infinite
+}
+
+#loading-point {
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .conteiner {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    animation: typing 1s linear infinite alternate;
+    position: relative;
+    left: -24px;
   }
 }

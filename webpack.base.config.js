@@ -1,6 +1,7 @@
 const vendors = [
   'react',
   'react-dom',
+  'redux-thunk',
   'react-redux',
   'react-router',
   'react-router-redux',
@@ -18,7 +19,6 @@ module.exports = {
     publicPath: '/dist/',
     chunkFilename: '[name].[chunkhash:5].js'
   },
-  devtool: "source-map",
   performance: {
     hints: "warning",
     maxAssetSize: 30000000,
@@ -30,7 +30,6 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx", ".less", ".css", ".json"]
   },
-
   module: {
     rules: [
       {
@@ -59,11 +58,6 @@ module.exports = {
         test: /\.less$/,
         loader: 'style-loader!css-loader!less-loader',
       },
-      {
-        enforce: "pre",
-        test: /\.js$/,
-        loader: "source-map-loader"
-      }
     ]
   },
 
