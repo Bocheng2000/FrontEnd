@@ -7,7 +7,7 @@ import localWithKey from '../../language'
 import { getFontFamily } from '../../utils/font'
 
 export interface IPicEditorProps {
-  ref?: (e: PicEditor) => void;
+  ref?: (e: PicEditor) => void
   fontFamily?: EFontFamily
   mode?: ESystemTheme
   language?: ELanguageEnv

@@ -88,5 +88,13 @@
   "input-email": "请输入你的常用邮箱",
   "link": "立即绑定",
   "more-special": "更多热门专题",
-  "load-more": "加载更多"
+  "load-more": "加载更多",
+  "answer-count": "回答",
+  "post-count": "文章",
+  "follower-count": "关注者",
+  "follow-ta": "关注Ta",
+  "message": "发私信",
+  "unfollow": "取消关注",
+  "login-first": "请先登录",
+  "follow-done": "操作成功"
 }

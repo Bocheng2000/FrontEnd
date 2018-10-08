@@ -41,6 +41,23 @@ export interface IFindListResponse {
   avatar: string
 }
 
+export interface IListPreviewParams {
+  userId?: string
+  targetId: string
+}
+
+export interface IListPreviewResponse {
+  answerCount: number
+  avatar: string
+  cover: string
+  followerCount: number
+  id: string
+  isFollow: boolean
+  name: string
+  postCount: number
+  whatIsUp: string
+}
+
 /**
  * 获取Banner图
  * @param params 
@@ -91,6 +108,24 @@ export function findList(
       callback(err)
     } else {
       callback(undefined, data as Array<IFindListResponse>)
+    }
+  })
+}
+
+/**
+ * 获取用户简要信息
+ * @param params 
+ * @param callback 
+ */
+export function listPreview(
+  params: IListPreviewParams,
+  callback: (err: string, data?: IListPreviewResponse) => void
+): void {
+  http.post(postApi, 'User.ListPreview', params, (err, data) => {
+    if (err) {
+      callback(err)
+    } else {
+      callback(undefined, data[0] as IListPreviewResponse)
     }
   })
 }

@@ -29,6 +29,7 @@ interface IPostListState {
 export default class PostList extends React.Component<IPostListProps, IPostListState> {
   private isLoading: boolean = false
   private timer: any = undefined
+  private preview: PersonPreview
   constructor(props: IPostListProps) {
     super(props)
     this.state = {
@@ -122,8 +123,19 @@ export default class PostList extends React.Component<IPostListProps, IPostListS
     }, animate_delay)
   }
 
+  mouseEnter(evt: React.MouseEvent, e: IFindListResponse) {
+    var target = evt.target as HTMLElement
+    this.preview.show({
+      y: target.offsetTop + 30,
+      targetId: e.userId
+    })
+  }
+
+  mouseLeave() {
+    this.preview.hide()
+  }
+
   renderItems(config: any, e: IFindListResponse) {
-    console.log(e)
     let to
     if (e.questionId) {
       to = `/a/${e.id}`
@@ -146,7 +158,11 @@ export default class PostList extends React.Component<IPostListProps, IPostListS
             {clipText(e.content)}
           </div>
           <div className="footer" style={{ color: config.tool }}>
-            <span className="footer-item pointer">
+            <span
+              className="footer-item pointer"
+              onMouseEnter={(evt) => this.mouseEnter(evt, e)}
+              onMouseLeave={() => this.mouseLeave()}
+            >
               <img src={getHashUrl(e.avatar)} className="avatar" />
               {e.userName}
             </span>
@@ -225,7 +241,12 @@ export default class PostList extends React.Component<IPostListProps, IPostListS
       >
         {dataSource.map(e => this.renderItems(config, e))}
         {this.renderLoadMore(isLoading, more)}
-        <PersonPreview mode={mode} language={language} fontFamily={fontFamily} />
+        <PersonPreview
+          ref={e => this.preview = e}
+          mode={mode}
+          language={language}
+          fontFamily={fontFamily}
+        />
       </ul>
     )
   }

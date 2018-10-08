@@ -26,35 +26,35 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
   private mainAction: typeof MainActions
   private timer: any
   private left: number
-  public show: (left: number) => void
-  public hide: () => void
   constructor(props: ISettingPanelProps) {
     super(props)
     this.mainAction = bindActionCreators(MainActions, props.dispatch)
-    this.show = (left: number) => {
-      if (this.timer) {
-        clearTimeout(this.timer)
-      }
-      const { visible } = this.state
-      this.left = left
-      if (!visible) {
-        this.setState({ visible: true })
-        setTimeout(() => {
-          document.getElementById('setting-panel').style.opacity = "1"
-        }, 100)
-      }
-    }
-    this.hide = () => {
-      if (this.timer) {
-        clearTimeout(this.timer)
-      }
-      this.timer = setTimeout(() => {
-        this.setState({ visible: false })
-      }, 200)
-    }
     this.state = {
       visible: false,
     }
+  }
+
+  public show(left: number) {
+    if (this.timer) {
+      clearTimeout(this.timer)
+    }
+    const { visible } = this.state
+    this.left = left
+    if (!visible) {
+      this.setState({ visible: true })
+      setTimeout(() => {
+        document.getElementById('setting-panel').style.opacity = "1"
+      }, 100)
+    }
+  }
+
+  public hide() {
+    if (this.timer) {
+      clearTimeout(this.timer)
+    }
+    this.timer = setTimeout(() => {
+      this.setState({ visible: false })
+    }, 200)
   }
 
   generateTheme(): Array<ISwitchData> {
