@@ -40,6 +40,10 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
 
   componentDidMount() {
     const path = window.location.pathname
+    if (path === '/') {
+      this.setHighIndex(0)
+      return
+    }
     if (path.search('/p') === 0) {
       this.setHighIndex(0)
       return

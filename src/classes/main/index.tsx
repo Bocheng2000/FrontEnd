@@ -1,23 +1,21 @@
 import * as React from 'react'
-import { Route, match, Link, Switch, Redirect } from 'react-router-dom'
+import { Route, match, Switch, Redirect } from 'react-router-dom'
 import Navbar from '../navbar'
 import Setting from '../setting'
 import Home from '../home'
+import PostDetail from '../home/postDetail'
+import AnswerDetail from '../home/answerDetail'
 
-interface IMainProps {
-  match?: match;
-  history: History;
-}
-
-class Main extends React.Component<IMainProps> {
+class Main extends React.Component {
   render() {
-    const { match } = this.props
     return (
       <div>
         <Navbar />
         <Switch>
           <Route path="/s" exact component={Setting} />
           <Route path="/" exact component={Home} />
+          <Route path="/p/:id" component={PostDetail} /> {/*等待实现*/}
+          <Route path="/a/:id" component={AnswerDetail} /> {/*等待实现*/}
           <Redirect to="/404" />
         </Switch>
       </div>
