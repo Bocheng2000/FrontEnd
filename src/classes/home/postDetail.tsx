@@ -9,7 +9,7 @@ class PostDetail extends React.Component<IPostDetailProps> {
   render() {
     console.log((this.props.match.params as any).id)
     return (
-      <div>aaa</div>
+      <div className="base-body">aaa</div>
     )
   }
 }

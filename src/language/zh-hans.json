@@ -96,5 +96,8 @@
   "message": "发私信",
   "unfollow": "取消关注",
   "login-first": "请先登录",
-  "follow-done": "操作成功"
+  "follow-done": "操作成功",
+  "write-post": "写文章",
+  "editor-switch": "选择编辑器",
+  "publish": "发布"
 }

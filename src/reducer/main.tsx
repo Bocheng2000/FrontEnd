@@ -1,3 +1,4 @@
+import * as $ from 'jquery'
 import { IUpdateKeyValue, IUpdateSystemConfig } from '../action/main'
 import { getThemeColor } from '../utils/font'
 
@@ -43,8 +44,7 @@ function getConfig() {
     fontColor: !fontColor ? EFontColor.day : parseInt(fontColor),
     language: !language ? ELanguageEnv.zhHans : parseInt(language)
   }
-  const target: HTMLElement = document.getElementsByTagName('body')[0]
-  target.style.background = getThemeColor(o.mode)
+  $('body').css('background', getThemeColor(o.mode))
   return o
 }
 

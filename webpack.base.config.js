@@ -6,6 +6,7 @@ const vendors = [
   'react-router',
   'react-router-redux',
   'redux',
+  'jquery',
 ]
 
 module.exports = {

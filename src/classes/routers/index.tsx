@@ -6,6 +6,7 @@ import Main from '../main'
 import Regist from '../regist'
 import Login from '../login'
 import NotFound from '../notfound'
+import Write from '../home/write'
 
 
 export default class Routers extends React.Component {
@@ -16,6 +17,7 @@ export default class Routers extends React.Component {
       <Router history={history}>
         <Switch>
           <Route path="/404" exact component={NotFound} />
+          <Route path="/w" component={Write} />
           <Route path="/r" exact component={Regist} />
           <Route path="/l" exact component={Login} />
           <Route path="/" component={Main}/>

@@ -6,6 +6,7 @@ import Home from '../home'
 import PostDetail from '../home/postDetail'
 import AnswerDetail from '../home/answerDetail'
 
+
 class Main extends React.Component {
   render() {
     return (

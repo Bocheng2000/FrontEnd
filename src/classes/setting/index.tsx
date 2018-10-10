@@ -6,6 +6,7 @@ import { IStoreState } from '../../reducer'
 import localWithKey from '../../language'
 import BaseSetting from './baseSetting'
 import PersonInfo from './personInfo'
+import * as instance from '../../utils/instance'
 
 interface ISettingProps {
   fontFamily: EFontFamily

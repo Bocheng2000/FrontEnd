@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
+import * as $ from 'jquery'
 import { bindActionCreators, Dispatch } from 'redux'
 import * as MainActions from '../../../action/main'
 import SwitchBtn from '../../component/SwitchBtn'
@@ -43,7 +44,7 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
     if (!visible) {
       this.setState({ visible: true })
       setTimeout(() => {
-        document.getElementById('setting-panel').style.opacity = "1"
+        $('#setting-panel').css('opacity', '1')
       }, 100)
     }
   }
@@ -64,8 +65,7 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
         title: localWithKey(language, 'on'),
         high: mode === ESystemTheme.night,
         handler: () => {
-          const target: HTMLElement = document.getElementsByTagName('body')[0]
-          target.style.background = getThemeColor(ESystemTheme.night)
+          $('body').css('background', getThemeColor(ESystemTheme.night))
           this.mainAction.updateSystemConfig({
             'mode': ESystemTheme.night,
             'fontColor': EFontColor.night,
@@ -79,8 +79,7 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
         title: localWithKey(language, 'off'),
         high: mode === ESystemTheme.day,
         handler: () => {
-          const target: HTMLElement = document.getElementsByTagName('body')[0]
-          target.style.background = getThemeColor(ESystemTheme.day)
+          $('body').css('background', getThemeColor(ESystemTheme.night))
           this.mainAction.updateSystemConfig({
             'mode': ESystemTheme.day,
             'fontColor': EFontColor.day,

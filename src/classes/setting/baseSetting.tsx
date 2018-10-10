@@ -1,7 +1,6 @@
 import * as React from 'react'
 import Radio from 'antd/lib/radio'
 import { connect } from 'react-redux'
-import { bindActionCreators, Dispatch } from 'redux'
 import { animate_delay } from '../../utils/config'
 import { ILoginResponse, ISettingResponse, findSetting, updateSetting } from '../../http/user'
 import Loading from './component/loading'
@@ -11,7 +10,6 @@ import localWithKey from '../../language'
 import { getFontColor, getFontFamily } from '../../utils/font'
 import * as instance from '../../utils/instance'
 import { showTips, EShowTipsType } from '../../utils/tips'
-import * as UserActions from '../../action/user'
 import Relink, { ERelinkType } from './component/reLink'
 
 const { Group } = Radio
@@ -22,7 +20,6 @@ interface IBaseSettingProps {
   fontColor: EFontColor
   fontFamily: EFontFamily
   info: ILoginResponse
-  dispatch?: Dispatch
 }
 
 interface IBaseSettingState {
@@ -34,11 +31,9 @@ interface IBaseSettingState {
 class BaseSetting extends React.Component<IBaseSettingProps, IBaseSettingState> {
   private timer: any
   private reLink: Relink
-  private userAction: typeof UserActions
 
   constructor(props: IBaseSettingProps) {
     super(props)
-    this.userAction = bindActionCreators(UserActions, props.dispatch)
     this.state = {
       init: false,
       info: props.info,

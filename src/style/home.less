@@ -204,8 +204,120 @@
   background-color: #FFFFFF;
   box-shadow: 0 1px 8px rgba(221, 221, 221, 0.9);
 }
-
 .person-preview-night {
   background-color: #3F3F3F;
   box-shadow: 0 1px 8px rgba(51, 51, 51, 0.9);
+}
+#write {
+  width: 100%;
+  height: calc(100vh);
+  padding-top: 66px;
+  .bar {
+    .display;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: all ease 0.3s;
+    min-width: 900px;
+    height: 56px;
+    box-shadow: 0 2px 3px rgba(26, 26, 26, 0.1);
+    z-index: 10;
+    .bar-container {
+      .display;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0 auto;
+      width: 900px;
+      .bar-tip {
+        font-weight: 600;
+        font-size: 20px;
+        margin-right: 40px;
+      }
+      .bar-editor {
+        font-size: 14px;
+        margin-right: 10px;
+      }
+      .editor-switch {
+        .display;
+        align-items: center;
+      }
+    }
+    .publish {
+      .transition;
+      .display;
+      color: #FFFFFF;
+      font-size: 15px;
+      background: #ea6f5a;
+      border: 1px solid #ea6f5a;
+      padding: 1px 12px;
+      border-radius: 18px;
+      cursor: pointer;
+      margin-right: 0;
+      align-items: center;
+      .yun {
+        font-size: 20px;
+        margin-right: 5px;
+      }
+    }
+    .publish:hover {
+      background: #ea624e;
+      transform: scale(1.1);
+    }
+  }
+  .container {
+    width: 900px;
+    margin: 0 auto;
+    .cover {
+      .display;
+      cursor: pointer;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 350px;
+      margin-bottom: 20px;
+      color: #999999;
+      .camera {
+        font-size: 30px;
+      }
+      .cover-tip {
+        .transition;
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        opacity: 0;
+        margin-top: 0;
+        display: none;
+      }
+    }
+    .cover:hover .cover-tip {
+      display: block;
+      opacity: 1;
+      margin-top: 30px;
+    }
+    .cover-o {
+      .display;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-end;
+      height: 350px;
+      margin-bottom: 20px;
+      color: #999999;
+      .image {
+        flex: 1;
+      }
+      .tool {
+        position: absolute;
+        background: rgba(0,0,0,0.85);
+        padding: 0 5px;
+        border-top-left-radius: 5px;
+        .camera {
+          font-size: 30px;
+          padding: 0 8px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
 }

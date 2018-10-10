@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as $ from 'jquery'
 import { EFontFamily, EFontColor, ESystemTheme, ELanguageEnv } from '../../../reducer/main'
 import { getFontColor } from '../../../utils/font'
 import localWithKey from '../../../language'
@@ -35,7 +36,7 @@ export default class UserController extends React.Component<IUserControllerProps
       if (!visible) {
         this.setState({ visible: true })
         setTimeout(() => {
-          document.getElementById('user-ctrl').style.opacity = "1"
+          $('#user-ctrl').css('opacity', '1')
         }, 100)
       }
     }

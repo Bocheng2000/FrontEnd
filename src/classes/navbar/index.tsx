@@ -11,6 +11,7 @@ import SettingPanel from './component/settingPanel'
 import UserController from './component/userController'
 import { getHashUrl } from '../../utils/http'
 import * as UserActions from '../../action/user'
+import { showTips } from '../../utils/tips';
 
 export interface INavbarProps {
   fontFamily: EFontFamily;
@@ -123,6 +124,15 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
     this.loginPanel.hide()
   }
 
+  toWrite() {
+    const { user, language } = this.props
+    if (user) {
+      this.linkTo('/w', -1)
+    } else {
+      showTips(localWithKey(language, 'login-first'))
+    }
+  }
+
   renderSearchBar(): JSX.Element {
     const { fontFamily, language, mode } = this.props
     return (
@@ -193,7 +203,7 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
             this.renderLogined():
             this.renderUnLogin()
         }
-        <span className="write" >
+        <span className="write" onClick={() => this.toWrite()}>
           <i className="iconfont icon-bi bi" />
           {localWithKey(language, 'write')}
         </span>
