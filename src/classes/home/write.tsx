@@ -143,7 +143,7 @@ class Write extends React.Component<IWriteProps, IWriteState> {
     const { language } = this.props
     this.special.show({
       handler: (e) => {
-        const content = `${localWithKey(language, 'post-belong')}: ${e.title}, ${localWithKey(language, 'sure')}?`
+        const content = `${localWithKey(language, 'post-belong')}: ${e.title} , ${localWithKey(language, 'sure')}?`
         this.confirm.show({
           type: EConfirmTypes.CONFIRM,
           title: localWithKey(language, 'special-confirm'),
@@ -161,6 +161,13 @@ class Write extends React.Component<IWriteProps, IWriteState> {
     })
   }
 
+  filterHtml(html: string) {
+    const reg = /(<img(?:(?!src|>).)*)(src[\=\"\'\s]+)?([^\"\'\s]*)([\"\']?)([^>]*>)/gi
+    return html.replace(reg, (a, b, c, d, e, f) => {
+      return `${b} data-original="${d}" class="lazy-load" ${f}`
+    })
+  }
+
   publish(html: string, specialId: string) {
     if (this.isRequest) {
       return
@@ -174,7 +181,7 @@ class Write extends React.Component<IWriteProps, IWriteState> {
       title: title,
       cover: cover,
       specialId: specialId,
-      content: html,
+      content: this.filterHtml(html),
     }, (err, data) => {
       this.isRequest = false
       if (err) {
