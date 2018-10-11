@@ -18,7 +18,6 @@ export interface IConfirmButton {
 }
 
 export interface IConfirmParams {
-  ref?: (e: Confirm) => void
   type: EConfirmTypes
   title: string
   content: string

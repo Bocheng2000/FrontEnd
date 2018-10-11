@@ -1,5 +1,6 @@
 import * as http from '../utils/http'
 import { postApi } from '../utils/config'
+import { IBaseAuth } from './user'
 
 export interface IFindBannerParams {
   pageSize: number,
@@ -56,6 +57,17 @@ export interface IListPreviewResponse {
   name: string
   postCount: number
   whatIsUp: string
+}
+
+export interface IPostCreateParams extends IBaseAuth {
+  cover?: string
+  title: string
+  content: string
+  specialId: string
+}
+
+export interface IPostCreateResponse {
+  id: string
 }
 
 /**
@@ -126,6 +138,24 @@ export function listPreview(
       callback(err)
     } else {
       callback(undefined, data[0] as IListPreviewResponse)
+    }
+  })
+}
+
+/**
+ * 创建post
+ * @param params 
+ * @param callback 
+ */
+export function createPost(
+  params: IPostCreateParams,
+  callback:(err: string, result?: IPostCreateResponse) => void
+): void {
+  http.post(postApi, 'Post.Create', params, (err, data) => {
+    if (err) {
+      callback(err)
+    } else {
+      callback(undefined, data[0] as IPostCreateResponse)
     }
   })
 }

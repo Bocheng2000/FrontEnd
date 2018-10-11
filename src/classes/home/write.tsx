@@ -11,10 +11,12 @@ import { getFontFamily, getThemeColor } from '../../utils/font'
 import localWithKey from '../../language'
 import PicEditor from '../component/picEditor'
 import { cover_w, cover_h } from '../../utils/config'
-import { showTips } from '../../utils/tips'
+import { showTips, EShowTipsType } from '../../utils/tips'
 import { upload } from '../../http/upload'
 import { getHashUrl } from '../../utils/http'
-
+import SelectSpecial from './component/selectSpecial'
+import Confirm, { EConfirmTypes } from '../component/confirm'
+import { createPost } from '../../http/home'
 
 const { Group } = Radio
 
@@ -29,16 +31,22 @@ interface IWriteProps {
 interface IWriteState {
   editor: ESettingEditor
   cover: string
+  title: string
 }
 
 class Write extends React.Component<IWriteProps, IWriteState> {
   private editor: PicEditor
+  private richEditor: Editor
+  private special: SelectSpecial
+  private confirm: Confirm
+  private isRequest: boolean
 
   constructor(props: IWriteProps) {
     super(props)
     this.state = {
       editor: ESettingEditor.RICHTEXT,
-      cover: ''
+      cover: '',
+      title: ''
     }
   }
 
@@ -116,12 +124,70 @@ class Write extends React.Component<IWriteProps, IWriteState> {
     })
   }
 
-  publish() {
+  prePublish() {
+    const { title } = this.state
+    const { language } = this.props
+    if (title.trim().length === 0) {
+      showTips(localWithKey(language, 'no-title'))
+      return
+    }
+    const html = this.richEditor.getContent()
+    if (html.replace('<p><br></p>', '').trim().length === 0) {
+      showTips(localWithKey(language, 'no-content'))
+      return
+    }
+    this.showSpecialModal(html)
+  }
 
+  showSpecialModal(html: string) {
+    const { language } = this.props
+    this.special.show({
+      handler: (e) => {
+        const content = `${localWithKey(language, 'post-belong')}: ${e.title}, ${localWithKey(language, 'sure')}?`
+        this.confirm.show({
+          type: EConfirmTypes.CONFIRM,
+          title: localWithKey(language, 'special-confirm'),
+          content,
+          cancel: {
+            title: localWithKey(language, 're-select'),
+            handler: () => this.showSpecialModal(html)
+          },
+          ok: {
+            title: localWithKey(language, 'continue'),
+            handler: () => this.publish(html, e.id),
+          }
+        })
+      }
+    })
+  }
+
+  publish(html: string, specialId: string) {
+    if (this.isRequest) {
+      return
+    }
+    this.isRequest = true
+    const { info, language } = this.props
+    const { title, cover } = this.state
+    createPost({
+      id: info.id,
+      token: info.token,
+      title: title,
+      cover: cover,
+      specialId: specialId,
+      content: html,
+    }, (err, data) => {
+      this.isRequest = false
+      if (err) {
+        showTips(err)
+      } else {
+        showTips(localWithKey(language, 'publish-success'), EShowTipsType.success)
+        instance.getValueByKey('history').replace(`/p/${data.id}`)
+      }
+    })
   }
 
   renderBar(config: any) {
-    const { language, fontFamily } = this.props
+    const { language, fontFamily, mode } = this.props
     const family = getFontFamily(fontFamily)
     return (
       <div className="bar" style={{ backgroundColor: config.backgroundColor }}>
@@ -151,7 +217,7 @@ class Write extends React.Component<IWriteProps, IWriteState> {
               </Radio>
             </Group>
           </div>
-          <span className="publish" onClick={() => this.publish()}>
+          <span className="publish" onClick={() => this.prePublish()}>
             <i className="iconfont icon-yun yun" />
             {localWithKey(language, 'publish')}
           </span>
@@ -167,13 +233,26 @@ class Write extends React.Component<IWriteProps, IWriteState> {
         <div className="cover-o" >
           <img className="image" src={getHashUrl(cover)} />
           <div className="tool">
-            <i className="iconfont icon-xiangji camera" />
-            <i className="iconfont icon-shanchu camera" />
+            <i
+              className="iconfont icon-xiangji camera"
+              onClick={() => $('#picker').click()}
+            />
+            <i
+              className="iconfont icon-shanchu camera"
+              onClick={() => this.setState({ cover: '' })}
+            />
           </div>
+          <input
+            id="picker"
+            type="file"
+            className="pick-file"
+            accept="image/*"
+            onChange={(e) => this.toPickerFile(e)}
+          />
         </div>
       )
     }
-    const { mode } = this.props
+    const { mode, language } = this.props
     return (
       <div
         className="cover"
@@ -183,7 +262,9 @@ class Write extends React.Component<IWriteProps, IWriteState> {
         onClick={() => $('#picker').click()}
       >
         <i className="iconfont icon-xiangji camera" />
-        <span className="cover-tip">添加题图</span>
+        <span className="cover-tip">
+          {localWithKey(language, 'add-cover')}
+        </span>
         <input
           id="picker"
           type="file"
@@ -195,6 +276,23 @@ class Write extends React.Component<IWriteProps, IWriteState> {
     )
   }
 
+  renderTitle(config: any) {
+    const { language, fontFamily } = this.props
+    return (
+      <input
+        value={this.state.title}
+        onChange={e => this.setState({ title: e.target.value })}
+        maxLength={30}
+        className="title-input"
+        placeholder={localWithKey(language, 'input-title')}
+        style={{
+          fontFamily: getFontFamily(fontFamily),
+          color: config.color,
+        }}
+      />
+    )
+  }
+
   render() {
     const { fontFamily, mode, language } = this.props
     const config = this.getConfig()
@@ -203,14 +301,29 @@ class Write extends React.Component<IWriteProps, IWriteState> {
         {this.renderBar(config)}
         <div className="container">
           {this.renderCover()}
-
-          <Editor mode={mode} language={language} />
+          {this.renderTitle(config)}
+          <Editor
+            ref={e => this.richEditor = e}
+            mode={mode}
+            language={language}
+          />
         </div>
         <PicEditor
           ref={(e) => { this.editor = e }}
           mode={mode}
           fontFamily={fontFamily}
           language={language}
+        />
+        <SelectSpecial
+          ref={e => this.special = e}
+          mode={mode}
+          fontFamily={fontFamily}
+          language={language}
+        />
+        <Confirm
+          ref={(e) => { this.confirm = e }}
+          mode={mode}
+          fontFamily={fontFamily}
         />
       </div>
     )

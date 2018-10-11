@@ -43,9 +43,6 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
     this.left = left
     if (!visible) {
       this.setState({ visible: true })
-      setTimeout(() => {
-        $('#setting-panel').css('opacity', '1')
-      }, 100)
     }
   }
 
@@ -79,7 +76,7 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
         title: localWithKey(language, 'off'),
         high: mode === ESystemTheme.day,
         handler: () => {
-          $('body').css('background', getThemeColor(ESystemTheme.night))
+          $('body').css('background', getThemeColor(ESystemTheme.day))
           this.mainAction.updateSystemConfig({
             'mode': ESystemTheme.day,
             'fontColor': EFontColor.day,

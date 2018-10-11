@@ -35,9 +35,6 @@ export default class UserController extends React.Component<IUserControllerProps
       this.left = left
       if (!visible) {
         this.setState({ visible: true })
-        setTimeout(() => {
-          $('#user-ctrl').css('opacity', '1')
-        }, 100)
       }
     }
     this.hide = () => {

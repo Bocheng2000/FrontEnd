@@ -6,10 +6,13 @@ import { getHashUrl } from '../../../utils/http'
 import { showTips } from '../../../utils/tips'
 import { ESystemTheme, ELanguageEnv } from '../../../reducer/main'
 import { cover_w } from '../../../utils/config'
+import localWithKey from '../../../language'
 
 export interface IEditorProps {
+  ref?: (e: Editor) => void
   mode?: ESystemTheme
   language?: ELanguageEnv
+  contentChange?: (html: string) => void
 }
 
 export default class Editor extends React.Component<IEditorProps> {
@@ -27,7 +30,7 @@ export default class Editor extends React.Component<IEditorProps> {
       'border-top': `1px solid #C8C8C8`,
       'border-bottom': `1px solid #C8C8C8`,
     })
-    $('#cloud-editor .w-e-text>p').css('color', config.color)
+    $('#cloud-editor .w-e-text').css('color', config.color)
   }
 
   getConfig() {
@@ -45,7 +48,12 @@ export default class Editor extends React.Component<IEditorProps> {
     return res
   }
 
+  public getContent(): string {
+    return this.editor.txt.html()
+  }
+
   configEditor() {
+    const { language, contentChange } = this.props
     const elem = document.getElementById('cloud-editor')
     this.editor = new E(elem)
     this.editor.customConfig.debug = false
@@ -81,31 +89,35 @@ export default class Editor extends React.Component<IEditorProps> {
       'image',  // 插入图片
       'code',  // 插入代码
       'undo',  // 撤销
+      'redo'
     ]
-    // this.editor.customConfig.lang = {
-    //   '设置标题': 'Title',
-    //   '正文': 'P',
-    //   '字号': 'Size',
-    //   '字体': 'Font-Family',
-    //   '文字颜色': 'Color',
-    //   '背景色': 'Background-Color',
-    //   '链接文字': 'Link-Text',
-    //   '插入代码': 'Insert-Code',
-    //   '插入': 'Insert',
-    //   '链接': 'Link',
-    //   '上传图片': 'Upload',
-    //   '上传': 'Upload',
-    //   '创建': 'Init',
-    //   '设置列表': 'List',
-    //   '有序列表': 'Ordered  ',
-    //   '无序列表': 'Disordered',
-    //   '对齐方式': 'Align',
-    //   '靠左': 'Left',
-    //   '居中': 'Center',
-    //   '靠右': 'Right'
-    // }
+    this.editor.customConfig.lang = {
+      '设置标题': localWithKey(language, 'editor-title'),
+      '正文': localWithKey(language, 'editor-p'),
+      '字号': localWithKey(language, 'editor-size'),
+      '字体': localWithKey(language, 'editor-font-family'),
+      '文字颜色': localWithKey(language, 'editor-color'),
+      '背景色': localWithKey(language, 'editor-bjcolor'),
+      '链接文字': localWithKey(language, 'editor-link-text'),
+      '插入代码': localWithKey(language, 'editor-insert-code'),
+      '插入': localWithKey(language, 'editor-insert'),
+      '链接': localWithKey(language, 'editor-link'),
+      '上传图片': localWithKey(language, 'editor-upload-img'),
+      '上传': localWithKey(language, 'editor-upload'),
+      '创建': localWithKey(language, 'editor-init'),
+      '设置列表': localWithKey(language, 'editor-list'),
+      '有序列表': localWithKey(language, 'editor-order'),
+      '无序列表': localWithKey(language, 'editor-disorder'),
+      '对齐方式': localWithKey(language, 'editor-align'),
+      '靠左': localWithKey(language, 'editor-left'),
+      '居中': localWithKey(language, 'editor-center'),
+      '靠右': localWithKey(language, 'editor-right')
+    }
+    if (contentChange) {
+      this.editor.customConfig.onchange = contentChange
+    }
     this.editor.create()
-    this.editor.clear()
+    this.editor.txt.clear()
   }
 
   uploadImage(base64: string) {
@@ -134,7 +146,7 @@ export default class Editor extends React.Component<IEditorProps> {
 
   render() {
     return (
-      <div id="cloud-editor"/>
+      <div id="cloud-editor" />
     )
   }
 }

@@ -45,6 +45,21 @@
       transform: scale(1.1);
     }
   }
+  .ok {
+    display: inline-block;
+    .transition;
+    line-height: 34px;
+    border-radius: 4px;
+    background: #ea6f5a;
+    padding: 0 20px;
+    color: #FFFFFF;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  .ok:hover {
+    background: #ea624e;
+    transform: scale(1.1);
+  }
 }
 .pic-edit-body {
   margin-top: 30px;
@@ -98,4 +113,55 @@
 }
 .bind:hover {
   background: #ea624e;
+}
+.pic-edit-content {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.pic-edit-search-cover {
+  margin-top: 20px;
+  padding-bottom: 5px;
+  .display;
+  align-items: center;
+  .pic-edit-search {
+    font-size: 20px;
+  }
+  .pic-edit-input {
+    flex: 1;
+    margin-left: 10px;
+    background: transparent;
+    border: none;
+    outline: none;
+  }
+  .pic-edit-input::placeholder {
+    color: #b4b4b4;
+  }
+}
+.special-contaier {
+  position: absolute;
+  left: 35px;
+  top: 155px;
+  max-height: 250px;
+  overflow-y: auto;
+  border-radius: 3px;
+  .special-item {
+    cursor: pointer;
+    .transition; 
+    padding: 5px 10px 5px 5px;
+    .special-avatar {
+      width: 30px;
+      height: 30px;
+    }
+    .special-title {
+      margin-left: 5px;
+    }
+  }
+  .special-item-day:hover {
+    background: #F7F8F9;
+  }
+  .special-item-night:hover {
+    background: #2F2F2F;
+  }
+  
 }
