@@ -23,6 +23,18 @@
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.0.tgz#2fac51050c68f7d6f96c5aafc631132522f4aa3f"
 
+"@types/jquery-lazyload@^1.9.1":
+  version "1.9.1"
+  resolved "http://registry.npmjs.org/@types/jquery-lazyload/-/jquery-lazyload-1.9.1.tgz#b200eb1d022a5de8bbb1a0304933fc475bb5b5a5"
+  dependencies:
+    "@types/jquery" "*"
+
+"@types/jquery@*":
+  version "3.3.17"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.3.17.tgz#0903a65889625facd424f19c6c0a03fddf00b4c6"
+  dependencies:
+    "@types/sizzle" "*"
+
 "@types/jquery@^3.3.10":
   version "3.3.10"
   resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.3.10.tgz#d0afaec7ee55f591992e74c607df5dc7cd9c76ab"
@@ -58,6 +70,12 @@
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.0.7.tgz#54d0f867a76b90597e8432030d297982f25c20ba"
   dependencies:
     "@types/node" "*"
+    "@types/react" "*"
+
+"@types/react-lazyload@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@types/react-lazyload/-/react-lazyload-2.3.1.tgz#6a1814432f668081ff693abfa8e09bff09aa3649"
+  dependencies:
     "@types/react" "*"
 
 "@types/react-redux@^6.0.9":
@@ -115,6 +133,10 @@
   resolved "https://registry.yarnpkg.com/@types/redux/-/redux-3.6.0.tgz#f1ebe1e5411518072e4fdfca5c76e16e74c1399a"
   dependencies:
     redux "*"
+
+"@types/sizzle@*":
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@types/sizzle/-/sizzle-2.3.2.tgz#a811b8c18e2babab7d542b3365887ae2e4d9de47"
 
 "@webassemblyjs/ast@1.7.8":
   version "1.7.8"
@@ -2188,6 +2210,10 @@ isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
+jquery-lazyload@^1.9.7:
+  version "1.9.7"
+  resolved "https://registry.yarnpkg.com/jquery-lazyload/-/jquery-lazyload-1.9.7.tgz#9982b388c533c0b611214b3c5aaa0b9fede071f7"
+
 jquery@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
@@ -3573,6 +3599,10 @@ react-lazy-load@^3.0.12:
     lodash.debounce "^4.0.0"
     lodash.throttle "^4.0.0"
     prop-types "^15.5.8"
+
+react-lazyload@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-lazyload/-/react-lazyload-2.3.0.tgz#ccb134223012447074a96543954f44b055dc6185"
 
 react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   version "3.0.4"

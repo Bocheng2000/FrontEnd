@@ -142,7 +142,8 @@ class PicEditor extends React.Component<IPicEditorProps, IPicEditorState>  {
       <Modal
         zIndex={10}
         className={config.mask}
-        title={null} centered
+        title={null}
+        centered
         maskClosable={false}
         closable={false}
         visible

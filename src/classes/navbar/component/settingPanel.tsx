@@ -69,7 +69,6 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
           })
           localStorage.setItem('mode', '1')
           localStorage.setItem('fontColor', '1')
-          this.hide()
         },
       },
       {
@@ -83,7 +82,6 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
           })
           localStorage.setItem('mode', '')
           localStorage.setItem('fontColor', '')
-          this.hide()
         },
       }
     ]
@@ -103,7 +101,6 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
             'fontFamily': EFontFamily.songti,
           })
           localStorage.setItem('fontFamily', '1')
-          this.hide()
         }
       },
       {
@@ -117,7 +114,6 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
             'fontFamily': EFontFamily.yahei,
           })
           localStorage.setItem('fontFamily', '')
-          this.hide()
         }
       }
     ]
@@ -135,7 +131,6 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
           })
           localStorage.setItem('language', '')
           instance.setValueByKey('language', ELanguageEnv.zhHans)
-          this.hide()
         }
       },
       {
@@ -147,7 +142,6 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
           })
           localStorage.setItem('language', '1')
           instance.setValueByKey('language', ELanguageEnv.zhHant)
-          this.hide()
         }
       },
       {
@@ -159,7 +153,6 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
           })
           localStorage.setItem('language', '2')
           instance.setValueByKey('language', ELanguageEnv.en)
-          this.hide()
         }
       }
     ]

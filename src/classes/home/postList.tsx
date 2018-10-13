@@ -126,6 +126,7 @@ export default class PostList extends React.Component<IPostListProps, IPostListS
   mouseEnter(evt: React.MouseEvent, e: IFindListResponse) {
     var target = evt.target as HTMLElement
     this.preview.show({
+      x: target.offsetLeft,
       y: target.offsetTop + 30,
       targetId: e.userId
     })
@@ -203,6 +204,8 @@ export default class PostList extends React.Component<IPostListProps, IPostListS
   renderLoading(mode: ESystemTheme) {
     return (
       <div style={{ marginBottom: '20px' }} >
+        <PostLoading mode={mode} />
+        <PostLoading mode={mode} />
         <PostLoading mode={mode} />
         <PostLoading mode={mode} />
       </div>

@@ -32,7 +32,7 @@ interface IConfirmState extends IConfirmParams {
 export interface IConfirmProps {
   mode?: ESystemTheme
   fontFamily?: EFontFamily
-  ref: (e: Confirm) => void
+  ref?: (e: Confirm) => void
 }
 
 export default class Confirm extends React.Component<IConfirmProps, IConfirmState> {

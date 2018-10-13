@@ -25,16 +25,20 @@ export interface IPersonPreviewState {
   targetId: string
   userId: string
   info?: IListPreviewResponse
+  handler?: (isFollow: boolean) => void
 }
 
 export interface IShowParams {
+  x: number
   y: number
   targetId: string
+  handler?: (isFollow: boolean) => void
 }
 
 export default class PersonPreview extends React.Component<IPersonPreviewProps, IPersonPreviewState> {
   private timer: any
   private loadingTimer: any
+  private x: number
   private y: number
   private userId: string
   private isRequest: boolean = false
@@ -59,13 +63,15 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
     this.timer && clearTimeout(this.timer)
     const { visible } = this.state
     this.y = params.y
+    this.x = params.x
     if (!visible) {
       this.setState({
         visible: true,
         isLoading: true,
         targetId: params.targetId,
         userId: this.userId,
-        info: undefined
+        info: undefined,
+        handler: params.handler
       })
     }
     this.personInfo(this.userId, params.targetId)
@@ -99,7 +105,8 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
         visible: false,
         targetId: '',
         userId: '',
-        info: undefined
+        info: undefined,
+        handler: undefined
       })
     }, 200)
   }
@@ -112,7 +119,7 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
       showTips(localWithKey(language, 'login-first'))
       return
     }
-    const { targetId } = this.state
+    const { targetId, handler } = this.state
     const user = instance.getValueByKey('info') as ILoginResponse
     createOrDel({
       id: user.id,
@@ -121,11 +128,13 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
       type: EFollowType.USER,
     }, (err) => {
       this.isRequest = false
+      const { info } = this.state
       if (err) {
         showTips(err)
+        handler && handler(info.isFollow)
       } else {
         showTips(localWithKey(language, 'follow-done'), EShowTipsType.success)
-        const { info } = this.state
+        handler && handler(!info.isFollow)
         this.setState({
           info: {
             ...info,
@@ -159,7 +168,7 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
   }
 
   render() {
-    const { isLoading, visible, info, targetId } = this.state
+    const { isLoading, visible, info, targetId, handler } = this.state
     if (!visible) {
       return null
     }
@@ -173,8 +182,9 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
           style={{
             paddingTop: '10px',
             top: `${this.y}px`,
+            left: `${this.x}px`
           }}
-          onMouseEnter={() => this.show({ y: this.y, targetId })}
+          onMouseEnter={() => this.show({ y: this.y, targetId, x: this.x, handler})}
           onMouseLeave={() => this.hide()}
         >
           <Loading />
@@ -185,12 +195,13 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
       <div
         id="person-preview"
         className={config.bodyClass}
-        onMouseEnter={() => this.show({ y: this.y, targetId })}
+        onMouseEnter={() => this.show({ y: this.y, targetId, x: this.x, handler })}
         onMouseLeave={() => this.hide()}
         style={{
           color: config.color,
           fontFamily: getFontFamily(fontFamily),
           top: `${this.y}px`,
+          left: `${this.x}px`
         }}
       >
         {
@@ -198,7 +209,6 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
             ? <img className="preview-cover" src={getHashUrl(info.cover)} />
             : null
         }
-
         <div className="preview-user">
           <img
             className="preview-avatar"

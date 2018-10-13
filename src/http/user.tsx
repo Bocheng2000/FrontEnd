@@ -128,6 +128,22 @@ export interface IBindEmailParams extends IBaseAuth {
   code: number
 }
 
+export interface IDetailPreviewParams {
+  userId?: string
+  targetId: string
+}
+
+export interface IDetailPreviewResponse {
+  avatar: string
+  followerCount: number
+  id: string
+  isFollow: boolean
+  likeCount: number
+  name: string
+  whatIsUp: string
+  wordsCount: number
+}
+
 /**
  * 登录
  * @param params 
@@ -301,4 +317,22 @@ export function bindEmail(
   callback: (err: string) => void
 ): void {
   http.post(postApi, 'User.BindEmail', parmas, callback)
+}
+
+/**
+ * 获取详情页的用户预览信息
+ * @param params 
+ * @param callback 
+ */
+export function detailPreview(
+  params: IDetailPreviewParams,
+  callback: (err: string, data?: IDetailPreviewResponse) => void
+): void {
+  http.post(postApi, 'User.DetailPreview', params, (err, data) => {
+    if (err) {
+      callback(err)
+    } else {
+      callback(undefined, data[0] as IDetailPreviewResponse)
+    }
+  })
 }

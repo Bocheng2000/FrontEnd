@@ -7,7 +7,6 @@ export interface IAnswerDetailProps {
 
 class AnswerDetail extends React.Component<IAnswerDetailProps> {
   render() {
-    console.log((this.props.match.params as any).id)
     return (
       <div>aaa</div>
     )

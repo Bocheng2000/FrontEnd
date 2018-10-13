@@ -70,6 +70,51 @@ export interface IPostCreateResponse {
   id: string
 }
 
+export interface IPostDetailParams {
+  userId?: string
+  id: string
+}
+
+export enum EPostDetailState {
+  NORMAL = 0,
+  DELETED
+}
+
+export interface IPostDetailPost {
+  collectCount: number
+  commentCount: number
+  content: string
+  cover: string
+  createdAt: string
+  id: string
+  isCollect: boolean
+  isLike: boolean
+  likeCount: number
+  readCount: number
+  state: EPostDetailState
+  title: string
+  wordsCount: number
+}
+
+export interface IPostDetailSpecial {
+  id: string
+  avatar: string
+  title: string
+}
+
+export interface IPostDetailUser {
+  avatar: string
+  id: string
+  isFollow: boolean
+  name: string
+}
+
+export interface IPostDetailResponse {
+  post: IPostDetailPost
+  special: IPostDetailSpecial
+  user: IPostDetailUser
+}
+
 /**
  * 获取Banner图
  * @param params 
@@ -156,6 +201,24 @@ export function createPost(
       callback(err)
     } else {
       callback(undefined, data[0] as IPostCreateResponse)
+    }
+  })
+}
+
+/**
+ * 获取帖子详情
+ * @param params 
+ * @param callback 
+ */
+export function postDetail(
+  params: IPostDetailParams,
+  callback: (err: string, data?: IPostDetailResponse) => void
+): void {
+  http.post(postApi, 'Post.Detail', params, (err, data) => {
+    if (err) {
+      callback(err)
+    } else {
+      callback(undefined, data[0] as IPostDetailResponse)
     }
   })
 }

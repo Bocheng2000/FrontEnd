@@ -25,6 +25,7 @@
   "dependencies": {
     "@types/antd": "^1.0.0",
     "@types/jquery": "^3.3.10",
+    "@types/jquery-lazyload": "^1.9.1",
     "@types/js-md5": "^0.4.2",
     "@types/moment": "^2.13.0",
     "@types/node": "^10.9.4",
@@ -42,6 +43,7 @@
     "clean-webpack-plugin": "^0.1.19",
     "express": "^4.16.3",
     "jquery": "^3.3.1",
+    "jquery-lazyload": "^1.9.7",
     "js-md5": "^0.7.3",
     "moment": "^2.22.2",
     "react": "^16.5.1",

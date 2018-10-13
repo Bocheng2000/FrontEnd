@@ -84,6 +84,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
         this.userAction.updateKeyValue('info', r)
         localStorage.setItem('user', JSON.stringify(r))
         instance.getValueByKey('history').replace('/')
+        instance.setValueByKey('info', r)
       }
     })
   }

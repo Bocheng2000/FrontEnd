@@ -20,6 +20,10 @@ export default class Editor extends React.Component<IEditorProps> {
 
   componentDidMount() {
     this.configEditor()
+    this.configUI()
+  }
+
+  configUI() {
     $('#cloud-editor>div').css({
       'background-color': 'transparent',
       'border': 'none',
@@ -128,7 +132,7 @@ export default class Editor extends React.Component<IEditorProps> {
       let { width, height } = o
       const w = cover_w - 10
       if (width > w) {
-        height = w / width * height
+        height = Math.floor(w / width * height)
         width = w
       }
       image = undefined

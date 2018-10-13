@@ -8,6 +8,7 @@ export default function () {
     window.console.log = undefined
     window.console.warn = undefined
     window.console.error = undefined
+    window.console.info = undefined
     return applyMiddleware(thunkMiddleware)(createStore)(reducers)
   }
   return applyMiddleware(thunkMiddleware, logger)(createStore)(reducers)
