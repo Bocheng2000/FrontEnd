@@ -1,6 +1,12 @@
 import * as React from 'react'
+import { ELanguageEnv, EFontFamily } from '../../../reducer/main'
+import { getFontFamily } from '../../../utils/font';
+import localWithKey from '../../../language';
 
 export interface ILikeProps {
+  fontFamily?: EFontFamily
+  language?: ELanguageEnv
+  canLike: boolean
   isLike: boolean
   likeCount: number
   handler?: () => void
@@ -17,14 +23,16 @@ export default class Like extends React.Component<ILikeProps> {
   }
 
   likeDidClick() {
-    const target = document.getElementById('like')
-    target.classList.toggle('liked')
-    const { handler } = this.props
+    const { handler, canLike } = this.props
+    if (canLike) {
+      const target = document.getElementById('like')
+      target.classList.toggle('liked')
+    }
     handler && handler()
   }
 
   render() {
-    const { likeCount, isLike } = this.props
+    const { likeCount, isLike, fontFamily, language } = this.props
     return (
       <div
         id="like-fix"
@@ -47,8 +55,14 @@ export default class Like extends React.Component<ILikeProps> {
           <div className="dot dot-7"></div>
           <div className="dot dot-8"></div>
         </div>
-        <div className="post-detail-like">
-          <span>喜欢</span>
+        <div
+          className="post-detail-like"
+          style={{
+            fontFamily: getFontFamily(fontFamily),
+            background: isLike ? 'rgba(232,112,94,0.1)' : 'transparent',
+          }}
+        >
+          <span>{localWithKey(language, 'like')}</span>
           <span>{likeCount}</span>
         </div>
       </div>

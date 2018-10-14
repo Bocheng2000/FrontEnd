@@ -478,6 +478,7 @@
     justify-content: space-between;
     margin-bottom: 40px;
     font-size: 13px;
+    align-items: center;
     .post-detail-special {
       .display;
       align-items: center;
@@ -568,7 +569,12 @@
     }
   }
   .post-detail-opt {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
     .post-detail-like {
+      .transition; 
       cursor: pointer;
       display: inline-flex;
       height: 70px;
@@ -581,13 +587,56 @@
       span:first-child {
         margin-right: 10px;
         padding: 2px 0;
-        border-right: 1px solid #EA6F5A;
         padding-right: 5px;
+        border-right: 1px solid #ea6f5a;
       }
       span {
-        color: #EA6F5A;
+        color: #ea6f5a;
       }
     }
+    .post-detail-share {
+      .icon {
+        .transition; 
+        font-size: 26px;
+        margin-left: 10px;
+        padding: 8px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+    }
+  }
+  .post-detail-menu {
+    display: flex;
+    position: fixed;
+    right: 20px;
+    bottom: 50px;
+    flex-direction: column;
+    span {
+      .transition; 
+      display: inline-flex;
+      width: 50px;
+      height: 50px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: -1px;
+      cursor: pointer;
+      .icon {
+        .transition; 
+        font-size: 25px;
+      }
+    }
+  }
+  .post-detail-menu-day {
+    border: 1px solid #E1E1E1;
+  }
+  .post-detail-menu-day:hover {
+    background: #f7f7f7;
+  }
+  .post-detail-menu-night {
+    border: 1px solid #1F1F1F;
+  }
+  .post-detail-menu-night:hover {
+    background: #2f2f2f;
   }
 }
 #rich-body {

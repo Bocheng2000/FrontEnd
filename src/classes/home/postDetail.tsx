@@ -21,6 +21,7 @@ import Report, { IReportOptions } from '../component/report'
 import { EReportType } from '../../http/report'
 import { parseNumber } from '../../utils/utils'
 import Like from './component/like'
+import { createOrDel as collectOrNot, ECollectType } from '../../http/collect'
 
 export interface IPostDetailProps {
   match?: match
@@ -62,6 +63,41 @@ class PostDetail extends React.Component<IPostDetailProps, IPostDetailState> {
 
   componentWillUnmount() {
     this.detailTimer && clearTimeout(this.detailTimer)
+  }
+
+  collectOrNot() {
+    const { language } = this.props
+    const info = instance.getValueByKey('info')
+    if (!info) {
+      showTips(localWithKey(language, 'login-first'))
+      return
+    }
+    this.isRequest = true
+    const me = info as ILoginResponse
+    const { detail } = this.state
+    const { post } = detail
+    collectOrNot({
+      id: me.id,
+      token: me.token,
+      objectId: post.id,
+      type: ECollectType.POST,
+    }, (err) => {
+      this.isRequest = false
+      if (err) {
+        showTips(err)
+      } else {
+        this.setState({
+          detail: {
+            ...detail,
+            post: {
+              ...post,
+              isCollect: !post.isCollect,
+              collectCount: post.isCollect ? post.collectCount - 1 : post.collectCount + 1,
+            }
+          }
+        })
+      }
+    })
   }
 
   configUI(mode?: ESystemTheme, fontFamily?: EFontFamily) {
@@ -184,6 +220,13 @@ class PostDetail extends React.Component<IPostDetailProps, IPostDetailState> {
   }
 
   likePost() {
+    let me = instance.getValueByKey('info')
+    if (!me) {
+      const { language } = this.props
+      showTips(localWithKey(language, 'login-first'))
+      return
+    }
+    me = me as ILoginResponse
     const { detail } = this.state
     const { post } = detail
     this.setState({
@@ -196,6 +239,12 @@ class PostDetail extends React.Component<IPostDetailProps, IPostDetailState> {
         }
       }
     })
+    createOrDel({
+      id: me.id,
+      token: me.token,
+      objectId: post.id,
+      type: EFollowType.POST
+    }, () => { })
   }
 
   showPreview(evt: React.MouseEvent, userId: string) {
@@ -313,6 +362,7 @@ class PostDetail extends React.Component<IPostDetailProps, IPostDetailState> {
               to={link}
               style={{ color: config.color }}
               onMouseEnter={(e) => this.showPreview(e, user.id)}
+              onMouseLeave={() => this.preview.hide()}
             >{user.name}</Link>
             <span
               className={`post-detail-btn ${user.isFollow ? 'post-detail-unfollow' : 'post-detail-follow'}`}
@@ -420,6 +470,7 @@ class PostDetail extends React.Component<IPostDetailProps, IPostDetailState> {
               className="post-detail-user-name"
               style={{ color: config.color }}
               onMouseEnter={e => this.showPreview(e, user.id)}
+              onMouseLeave={() => this.preview.hide()}
             >{user.name}</Link>
             <div className="post-detail-descript">
               <span>
@@ -444,9 +495,9 @@ class PostDetail extends React.Component<IPostDetailProps, IPostDetailState> {
         {
           preview.whatIsUp
             ? (<div
-                className="post-detail-user-what"
-                style={{ borderTop: config.border }}
-              >{preview.whatIsUp}</div>)
+              className="post-detail-user-what"
+              style={{ borderTop: config.border }}
+            >{preview.whatIsUp}</div>)
             : null
         }
       </div>
@@ -454,14 +505,84 @@ class PostDetail extends React.Component<IPostDetailProps, IPostDetailState> {
   }
 
   renderLikeAndShare(config: any) {
+    const { language, fontFamily } = this.props
     const { detail: { post } } = this.state
     return (
       <div className="post-detail-opt">
         <Like
+          canLike={!!instance.getValueByKey('info')}
           isLike={post.isLike}
           likeCount={post.likeCount}
           handler={() => this.likePost()}
+          language={language}
+          fontFamily={fontFamily}
         />
+        <div className="post-detail-share">
+          <Tooltip
+            placement="top"
+            title={localWithKey(language, 'share-weixin')}
+          >
+            <i
+              className="iconfont icon-weixin icon"
+              style={{ border: config.border, color: '#00bb29' }}
+            />
+          </Tooltip>
+          <Tooltip
+            placement="top"
+            title={localWithKey(language, 'share-weibo')}
+          >
+            <i
+              className="iconfont icon-sina icon"
+              style={{ border: config.border, color: '#e05244' }}
+            />
+          </Tooltip>
+          {/* <i
+            className="iconfont icon-xiangce icon"
+            style={{ border: config.border, color: '#9b9b9b' }}
+          /> */}
+        </div>
+      </div>
+    )
+  }
+
+  renderCommentInput(config: any) {
+    return (
+      <div>
+        ssss
+      </div>
+    )
+  }
+
+  renderRightMenu(config: any) {
+    const { language, mode } = this.props
+    const { detail: { post } } = this.state
+    return (
+      <div className="post-detail-menu" >
+        <Tooltip
+          placement="left"
+          title={localWithKey(language, 'back-top')}
+        >
+          <span
+            className={mode === ESystemTheme.day ? 'post-detail-menu-day' : 'post-detail-menu-night'}
+            onClick={() => $("html,body").animate({ scrollTop:0 }, 350)}
+          >
+            <i className="iconfont icon-fanhuidingbu icon" style={{ color: config.color }}/>
+          </span>
+        </Tooltip>
+        <Tooltip
+          placement="left"
+          title={localWithKey(language, post.isCollect ? 'un-collect' : 'to-collect')}
+        >
+          <span
+            className={mode === ESystemTheme.day ? 'post-detail-menu-day' : 'post-detail-menu-night'}
+            onClick={() => this.collectOrNot()}
+          >
+            <i
+              className={`iconfont ${post.isCollect ? 'icon-shuqian' : 'icon-shuqian1' } icon`}
+              style={{ color: post.isCollect ? '#ea6f5a' : config.color }}
+            />
+          </span>
+        </Tooltip>
       </div>
     )
   }
@@ -486,6 +607,8 @@ class PostDetail extends React.Component<IPostDetailProps, IPostDetailState> {
         {this.renderSpecial(config)}
         {this.renderUserPreivew(config)}
         {this.renderLikeAndShare(config)}
+        {this.renderCommentInput(config)}
+        {this.renderRightMenu(config)}
         <PersonPreview
           ref={e => this.preview = e}
           mode={mode}

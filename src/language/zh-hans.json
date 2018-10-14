@@ -160,5 +160,11 @@
   "been": "被 ",
   "to-follow": " 人关注",
   "get": "获得了 ",
-  "likes": " 个喜欢"
+  "likes": " 个喜欢",
+  "like": "喜欢",
+  "share-weixin": "分享到微信",
+  "share-weibo": "分享到微博",
+  "back-top": "返回顶部",
+  "to-collect": "收藏",
+  "un-collect": "取消收藏"
 }

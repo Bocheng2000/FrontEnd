@@ -117,6 +117,9 @@ export default class Editor extends React.Component<IEditorProps> {
       '居中': localWithKey(language, 'editor-center'),
       '靠右': localWithKey(language, 'editor-right')
     }
+    this.editor.customConfig.pasteTextHandle = (content: string) => {
+      return content.replace(/<img[^>]*>/g, '')
+    }
     if (contentChange) {
       this.editor.customConfig.onchange = contentChange
     }
