@@ -139,7 +139,7 @@ export default class PostList extends React.Component<IPostListProps, IPostListS
   renderItems(config: any, e: IFindListResponse) {
     let to
     if (e.questionId) {
-      to = `/a/${e.id}`
+      to = `/q/${e.questionId}/${e.id}`
     } else {
       to = `/p/${e.id}`
     }
@@ -210,6 +210,10 @@ export default class PostList extends React.Component<IPostListProps, IPostListS
         <PostLoading mode={mode} />
       </div>
     )
+  }
+
+  renderEmpty() {
+    
   }
 
   renderLoadMore(isLoading: boolean, more: boolean) {

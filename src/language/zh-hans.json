@@ -166,5 +166,14 @@
   "share-weibo": "分享到微博",
   "back-top": "返回顶部",
   "to-collect": "收藏",
-  "un-collect": "取消收藏"
+  "un-collect": "取消收藏",
+  "follow-question": "关注问题",
+  "unfollow-question": "取消关注",
+  "write-answer": "写回答",
+  "to-share": "分享",
+  "invite-answer": "邀请回答",
+  "to-report": "举报",
+  "be-visit": "被浏览",
+  "question-list": "问题",
+  "follow-special": "关注专题"
 }

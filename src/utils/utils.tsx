@@ -43,9 +43,7 @@ export function clipText(text: string): string {
 export function parseNumber(count: number): string {
   if (count < 1000)
     return count.toString()
-  if (count < 10000)
-    return `${(count / 10000).toFixed(1)} K`
-  if (count < 1000000)
-    return `${(count / 1000000).toFixed(1)} W`
-  return `${(count / 100000000).toFixed(1)} M`
+  if (count <= 100000)
+    return `${(count / 1000).toFixed(1)}k`
+  return `${(count / 1000000).toFixed(1)}m`
 }

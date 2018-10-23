@@ -1,41 +1,40 @@
 import * as React from 'react'
 import { ESystemTheme, ELanguageEnv, EFontFamily } from '../../reducer/main'
-import { getFontFamily } from '../../utils/font'
-import { listPreview, IListPreviewResponse } from '../../http/home'
-import { animate_delay } from '../../utils/config'
-import Loading from '../component/loading'
-import { getHashUrl } from '../../utils/http'
-import localWithKey from '../../language';
-import { parseNumber } from '../../utils/utils'
+import { IFindPreviewResponse, findPreview } from '../../http/special'
+import localWithKey from '../../language'
 import * as instance from '../../utils/instance'
 import { ILoginResponse } from '../../http/user'
-import { showTips, EShowTipsType } from '../../utils/tips'
+import { getFontFamily } from '../../utils/font'
+import Loading from '../component/loading'
+import { animate_delay } from '../../utils/config'
+import { getHashUrl } from '../../utils/http';
+import { parseNumber } from '../../utils/utils'
 import { createOrDel, EFollowType } from '../../http/follow'
+import { showTips } from '../../utils/tips';
 
 export interface IPersonPreviewProps {
-  ref?: (e: PersonPreview) => void
+  ref?: (e: SpecialPreview) => void
   mode?: ESystemTheme
   language?: ELanguageEnv
   fontFamily?: EFontFamily
 }
 
-export interface IPersonPreviewState {
+interface ISpecialPreviewState {
   isLoading: boolean
   visible: boolean
   targetId: string
-  userId: string
-  info?: IListPreviewResponse
+  info?: IFindPreviewResponse
   handler?: (isFollow: boolean) => void
 }
 
-export interface IShowParams {
+export interface ISpecialPreviewParams {
   x: number
   y: number
   targetId: string
   handler?: (isFollow: boolean) => void
 }
 
-export default class PersonPreview extends React.Component<IPersonPreviewProps, IPersonPreviewState> {
+export default class SpecialPreview extends React.Component<IPersonPreviewProps, ISpecialPreviewState> {
   private timer: any
   private loadingTimer: any
   private x: number
@@ -48,12 +47,12 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
       isLoading: false,
       visible: false,
       targetId: '',
-      userId: '',
-      info: undefined
+      info: undefined,
+      handler: undefined
     }
   }
 
-  public show(params: IShowParams) {
+  public show(params: ISpecialPreviewParams) {
     this.timer && clearTimeout(this.timer)
     const { visible } = this.state
     this.y = params.y
@@ -69,20 +68,33 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
         visible: true,
         isLoading: true,
         targetId: params.targetId,
-        userId: this.userId,
-        info: undefined,
-        handler: params.handler
+        handler: params.handler,
       })
     }
-    this.personInfo(this.userId, params.targetId)
+    this.findPreview()
   }
 
-  private personInfo(userId: string, targetId: string) {
+  public hide() {
+    this.timer && clearTimeout(this.timer)
+    this.loadingTimer && clearTimeout(this.loadingTimer)
+    this.timer = setTimeout(() => {
+      this.setState({
+        isLoading: false,
+        visible: false,
+        targetId: '',
+        info: undefined,
+        handler: undefined
+      })
+    }, 200)
+  }
+
+  findPreview() {
     this.loadingTimer && clearTimeout(this.loadingTimer)
     this.loadingTimer = setTimeout(() => {
-      listPreview({
-        userId: userId,
-        targetId: targetId,
+      const { targetId } = this.state
+      findPreview({
+        userId: this.userId,
+        id: targetId,
       }, (err, data) => {
         if (err || !data) {
           this.hide()
@@ -96,52 +108,34 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
     }, animate_delay)
   }
 
-  public hide() {
-    this.timer && clearTimeout(this.timer)
-    this.loadingTimer && clearTimeout(this.loadingTimer)
-    this.timer = setTimeout(() => {
-      this.setState({
-        isLoading: true,
-        visible: false,
-        targetId: '',
-        userId: '',
-        info: undefined,
-        handler: undefined
-      })
-    }, 200)
-  }
-
-  private followOrNot() {
-    if (this.isRequest) return
-    this.isRequest = true
+  followOrNot() {
     const { language } = this.props
     if (!this.userId) {
       showTips(localWithKey(language, 'login-first'))
       return
     }
-    const { targetId, handler } = this.state
-    const user = instance.getValueByKey('info') as ILoginResponse
+    if (this.isRequest) return
+    this.isRequest = true
+    let user = instance.getValueByKey('info') as ILoginResponse
+    const { targetId, info, handler } = this.state
     createOrDel({
       id: user.id,
       token: user.token,
       objectId: targetId,
-      type: EFollowType.USER,
+      type: EFollowType.SPECIAL,
     }, (err) => {
       this.isRequest = false
-      const { info } = this.state
       if (err) {
         showTips(err)
-        handler && handler(info.isFollow)
       } else {
-        showTips(localWithKey(language, 'follow-done'), EShowTipsType.success)
-        handler && handler(!info.isFollow)
         this.setState({
           info: {
             ...info,
             isFollow: !info.isFollow,
             followerCount: info.isFollow ? info.followerCount - 1 : info.followerCount + 1,
-          }
+          },
         })
+        handler && handler(!info.isFollow)
       }
     })
   }
@@ -168,11 +162,8 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
   }
 
   render() {
-    const { isLoading, visible, info, targetId, handler } = this.state
-    if (!visible) {
-      return null
-    }
-    const { fontFamily, language } = this.props
+    const { visible, isLoading, info, targetId, handler } = this.state
+    if (!visible) return null
     const config = this.getConfig()
     if (isLoading) {
       return (
@@ -184,75 +175,73 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
             top: `${this.y}px`,
             left: `${this.x}px`
           }}
-          onMouseEnter={() => this.show({ y: this.y, targetId, x: this.x, handler})}
+          onMouseEnter={() => this.show({ y: this.y, targetId, x: this.x, handler })}
           onMouseLeave={() => this.hide()}
         >
           <Loading />
         </div>
       )
     }
+    const { language, fontFamily } = this.props
     return (
       <div
         id="person-preview"
         className={config.bodyClass}
-        onMouseEnter={() => this.show({ y: this.y, targetId, x: this.x, handler })}
-        onMouseLeave={() => this.hide()}
         style={{
           color: config.color,
           fontFamily: getFontFamily(fontFamily),
           top: `${this.y}px`,
           left: `${this.x}px`
         }}
+        onMouseEnter={() => this.show({ y: this.y, targetId, x: this.x, handler })}
+        onMouseLeave={() => this.hide()}
       >
-        {
-          info.cover
-            ? <img className="preview-cover" src={getHashUrl(info.cover)} />
-            : null
-        }
         <div className="preview-user">
           <img
             className="preview-avatar"
             src={getHashUrl(info.avatar)}
             style={{ border: config.coverBorder }}
           />
-          <div className="preview-info">
-            <span className="name">{info.name}</span>
-            <span className="what-is-up">{info.whatIsUp}</span>
+          <div className="preview-info" style={{ fontSize: 15 }}>
+            {info.title}
           </div>
         </div>
-        <div
-          className="preview-tips"
-          style={{ borderTop: config.border }}
-        >
-          <div className="tip-item">
-            <span className="k">
-              {localWithKey(language, 'answer-count')}
-            </span>
-            <span className="v" style={{ color: config.color }}>
-              {parseNumber(info.answerCount)}
-            </span>
+        {
+          info.introduction ?
+            <div className="preview-introduction" style={{ borderBottom: config.border }}>
+              {info.introduction}
+            </div> : null
+        }
+        <div className="preview-items">
+          <div className="p-item">
+            <div className="p-tag">
+              {localWithKey(language, 'question-list')}
+            </div>
+            <div className="p-count">
+              {parseNumber(info.questionCount)}
+            </div>
           </div>
-          <div className="tip-item">
-            <span className="k">{localWithKey(language, 'post-count')}</span>
-            <span className="v" style={{ color: config.color }}>
-              {parseNumber(info.postCount)}
-            </span>
+          <div className="p-item">
+            <div className="p-tag">
+              {localWithKey(language, 'to-share')}
+            </div>
+            <div className="p-count">
+              {parseNumber(info.shareCount)}
+            </div>
           </div>
-          <div className="tip-item">
-            <span className="k">{localWithKey(language, 'follower-count')}</span>
-            <span className="v" style={{ color: config.color }}>
+          <div className="p-item">
+            <div className="p-tag">
+              {localWithKey(language, 'follower-count')}
+            </div>
+            <div className="p-count">
               {parseNumber(info.followerCount)}
-            </span>
+            </div>
           </div>
         </div>
-        <div className="preview-footer">
+        <div className="preview-footer" style={{ justifyContent: 'center' }}>
           <div className="btn follow" onClick={() => this.followOrNot()}>
             <i className={`iconfont ${info.isFollow ? 'icon-jian' : 'icon-jia'} icon`} />
-            {localWithKey(language, info.isFollow ? 'unfollow' : 'follow-ta')}
-          </div>
-          <div className="btn message">
-            <i className="iconfont icon-xiaoxi icon" />
-            {localWithKey(language, 'message')}
+            {localWithKey(language, info.isFollow ? 'unfollow' : 'follow-special')}
           </div>
         </div>
       </div>

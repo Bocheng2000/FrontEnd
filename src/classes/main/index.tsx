@@ -13,10 +13,11 @@ class Main extends React.Component {
       <div>
         <Navbar />
         <Switch>
-          {/* <Route path="/t" exact component={Setting} /> */}
           {/* <Route path="/t/:id" exact component={Setting} /> */}
+          {/* <Route path="/t" exact component={Setting} /> */}
           <Route path="/p/:id" component={PostDetail} /> {/*等待实现*/}
-          <Route path="/a/:id" component={AnswerDetail} /> {/*等待实现*/}
+          <Route path="/q/:qid/:aid" component={AnswerDetail} /> {/*等待实现*/}
+          {/* <Route path="/q/:qid" component={AnswerDetail} /> 等待实现 */}
           <Route path="/s" exact component={Setting} />
           <Route path="/" exact component={Home} />
           {/* <Route path="/u/:id" component={PostDetail} /> 等待实现 */}

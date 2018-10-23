@@ -115,6 +115,30 @@ export interface IPostDetailResponse {
   user: IPostDetailUser
 }
 
+export interface IQuestionPreviewParams {
+  id: string
+  userId?: string
+}
+
+export enum EQuestionState {
+  NORMAL = 0,
+  DELETED
+}
+
+export interface IQuestionPreviewResponse {
+  commentCount: number
+  createdAt: string
+  followerCount: number
+  id: string
+  introduction: string
+  isFollow: boolean
+  specialId: string
+  specialTitle: string
+  state: EQuestionState
+  title: string
+  visitCount: number
+}
+
 /**
  * 获取Banner图
  * @param params 
@@ -219,6 +243,24 @@ export function postDetail(
       callback(err)
     } else {
       callback(undefined, data[0] as IPostDetailResponse)
+    }
+  })
+}
+
+/**
+ * 根据ID获取预览的问题面板
+ * @param params 
+ * @param callback 
+ */
+export function questionPreview(
+  params: IQuestionPreviewParams,
+  callback: (err: string, data?: IQuestionPreviewResponse) => void
+): void {
+  http.post(postApi, 'Question.Preview', params, (err, data) => {
+    if (err) {
+      callback(err)
+    } else {
+      callback(undefined, data[0] as IQuestionPreviewResponse)
     }
   })
 }

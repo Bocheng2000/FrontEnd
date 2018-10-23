@@ -345,7 +345,7 @@ class PostDetail extends React.Component<IPostDetailProps, IPostDetailState> {
 
   renderAuthor(config: any) {
     const { detail: { post, user } } = this.state
-    const { fontFamily, language } = this.props
+    const { fontFamily, language, mode } = this.props
     const link = `/u/${user.id}`
     return (
       <div
@@ -365,7 +365,7 @@ class PostDetail extends React.Component<IPostDetailProps, IPostDetailState> {
               onMouseLeave={() => this.preview.hide()}
             >{user.name}</Link>
             <span
-              className={`post-detail-btn ${user.isFollow ? 'post-detail-unfollow' : 'post-detail-follow'}`}
+              className={`post-detail-btn ${user.isFollow ? (mode === ESystemTheme.night ? 'post-detail-unfollow-night' : 'post-detail-unfollow-day') : 'post-detail-follow'}`}
               onClick={() => this.followOrNot()}
             >
               <i className={`iconfont ${user.isFollow ? 'icon-jian' : 'icon-jia'} icon`} />
@@ -434,7 +434,7 @@ class PostDetail extends React.Component<IPostDetailProps, IPostDetailState> {
   }
 
   renderUserPreivew(config: any) {
-    const { fontFamily, language } = this.props
+    const { fontFamily, language, mode } = this.props
     let { preview, detail: { user } } = this.state
     if (preview === undefined) {
       preview = {
@@ -485,7 +485,7 @@ class PostDetail extends React.Component<IPostDetailProps, IPostDetailState> {
             </div>
           </div>
           <span
-            className={`post-detail-btn ${user.isFollow ? 'post-detail-unfollow' : 'post-detail-follow'}`}
+            className={`post-detail-btn ${user.isFollow ? (mode === ESystemTheme.night ? 'post-detail-unfollow-night' : 'post-detail-unfollow-day') : 'post-detail-follow'}`}
             onClick={() => this.followOrNot()}
           >
             <i className={`iconfont ${user.isFollow ? 'icon-jian' : 'icon-jia'} icon`} />
