@@ -153,7 +153,7 @@ export function login (
   params: ILoginParams,
   callback: (err: string, response?: ILoginResponse) => void
 ): void {
-  const sort = moment(Date.now()).format('YYYYMMDDHHmm')
+  const sort = moment(Date.now()).utc().format('YYYYMMDDHHmm')
   const hashSort = `${md5.hex(params.password)}${sort}`
   http.post(postApi, 'User.Login', {
     phone: params.phone,

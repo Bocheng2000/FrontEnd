@@ -8,14 +8,12 @@ import { EFontColor, EFontFamily, ELanguageEnv, ESystemTheme } from '../../reduc
 import { getFontFamily } from '../../utils/font'
 import QuestionBar from './component/questionBar'
 import { animate_delay } from '../../utils/config'
-
-export interface IAnswerDetailProps {
-  match?: match
-  fontFamily: EFontFamily
-  fontColor: EFontColor
-  language: ELanguageEnv
-  mode: ESystemTheme
-}
+import { answerList, IAnswerListResponse } from '../../http/home'
+import { showTips } from '../../utils/tips'
+import * as instance from '../../utils/instance'
+import { ILoginResponse } from '../../http/user'
+import localWithKey from '../../language';
+import AnswerItem from './component/answerItem'
 
 const styles = {
   clear: {
@@ -28,19 +26,58 @@ const styles = {
   }
 }
 
-class AnswerDetail extends React.Component<IAnswerDetailProps> {
+export interface IAnswerDetailProps {
+  match?: match
+  fontFamily: EFontFamily
+  fontColor: EFontColor
+  language: ELanguageEnv
+  mode: ESystemTheme
+}
+
+interface IAnswerDetailState {
+  info: IAnswerListResponse
+}
+
+class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailState> {
   private questionId: string
   private answerId: string
+  private timer: any
 
   constructor(props: IAnswerDetailProps) {
     super(props)
     const params: any = props.match.params
     this.questionId = params.qid
     this.answerId = params.aid
+    this.state = {
+      info: undefined
+    }
   }
 
   componentDidMount() {
-    
+    this.timer = setTimeout(() => {
+      let userId
+      let me = instance.getValueByKey('info')
+      if (me) {
+        userId = (me as ILoginResponse).id
+      }
+      const params = {
+        answerId: this.answerId,
+        questionId: this.questionId,
+        userId,
+        pageSize: 2,
+        allAnswerCount: true
+      }
+      answerList(params, (err, data) => {
+        if (err) {
+          showTips(err)
+          setTimeout(() => {
+            instance.getValueByKey('history').replace(`/q/${this.questionId}`)
+          }, 200)
+        } else {
+          this.setState({ info: data })
+        }
+      })
+    }, animate_delay)
   }
 
   componentWillReceiveProps(nextProps: IAnswerDetailProps) {
@@ -48,6 +85,10 @@ class AnswerDetail extends React.Component<IAnswerDetailProps> {
     if (nextProps.mode !== mode) {
       this.configUI(nextProps.mode)
     }
+  }
+
+  componentWillUnmount() {
+    this.timer && clearTimeout(this.timer)
   }
 
   configUI(mode?: ESystemTheme, fontFamily?: EFontFamily) {
@@ -97,50 +138,40 @@ class AnswerDetail extends React.Component<IAnswerDetailProps> {
   }
 
   renderOtherAnswer(config: any) {
+    const { language } = this.props
+    const { info: { answerCount } } = this.state
+    if (answerCount === 0) {
+      return null
+    }
     return (
-      <Link to={`/q/${111}`}>
+      <Link to={`/q/${this.questionId}`}>
         <div
           className="shadow other-answer"
           style={{ background: config.block }}
-        >查看其他 40 个回答</div>
+        >{`${localWithKey(language, 'view-other')} ${answerCount} ${localWithKey(language, 'answer-c')}`}</div>
       </Link>
     )
   }
 
   renderTargetAnswer(config: any) {
+    const { mode, language } = this.props
+    const { info: { answer: { user, answer } } } = this.state
     return (
-      <div className="shadow a-a" style={{ background: config.block }}>
-        <div className="a-top">
-          <Link to={`/u/${"2"}`}>
-            <img className="a-avatar" src="https://pic3.zhimg.com/2b8be8010409012e7cdd764e1befc4d1_l.jpg" />
-          </Link>
-          <div className="a-info">
-            <Link className="a-name" to={`/u/${"2"}`} style={{ color: config.color }}>
-              啦啦
-            </Link>
-            <span className="a-intro">啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦</span>
-          </div>
-        </div>
-        <div id="rich-body" className="w-e-text" dangerouslySetInnerHTML={{ __html: `<p>111111</p>` }}/>
-        <div className="a-f">
-          <span className="a-f-base a-f-b a-f-to-day">
-            <i className="iconfont icon-sanjiaojiantoushang icon" />
-            已赞同 1.96k
-          </span>
-          <span className="a-f-base">
-            <i className="iconfont icon-comment icon" />
-            1.96k 评论
-          </span>
-          <span className="a-f-base">
-            <i className="iconfont icon-comment icon" />
-            1.96k 评论
-          </span>
-        </div>
-      </div>
+      <AnswerItem
+        mode={mode}
+        language={language}
+        answer={answer}
+        user={user}
+        config={config}
+      />
     )
   }
 
   renderBody(config: any) {
+    const { info } = this.state
+    if (!info) {
+      return null
+    }
     return (
       <Row
         gutter={24}
@@ -152,9 +183,41 @@ class AnswerDetail extends React.Component<IAnswerDetailProps> {
         <Col id="answer-detail" span={16} style={styles.clear}>
           {this.renderOtherAnswer(config)}
           {this.renderTargetAnswer(config)}
+          {this.renderOthers(config)}
         </Col>
         <Col span={7} style={styles.clear}>col-4</Col>
       </Row>
+    )
+  }
+
+  renderOthers(config: any) {
+    const { info } = this.state
+    if (!info) return null
+    const { list } = info
+    if (!list || list.length === 0) return null
+    const { mode, language } = this.props
+    return (
+      <div>
+        <div
+          className="other-answer a-a-line"
+          style={{ background: config.block }}
+        >
+          <span style={{ marginRight: 20, marginLeft: 30 }} />
+          {localWithKey(language, 'more-answer')}
+          <span style={{ marginLeft: 20, marginRight: 30 }} />
+        </div>
+        {list.map(({ answer, user }) => (
+          <AnswerItem
+            key={answer.id}
+            mode={mode}
+            language={language}
+            answer={answer}
+            user={user}
+            config={config}
+          />
+        ))}
+        {this.renderOtherAnswer(config)}
+      </div>
     )
   }
 
@@ -162,7 +225,10 @@ class AnswerDetail extends React.Component<IAnswerDetailProps> {
     const config = this.getConfig()
     const { mode, fontFamily } = this.props
     return (
-      <div id="answer" style={{ background: config.bj, fontFamily: getFontFamily(fontFamily) }}>
+      <div
+        id="answer"
+        style={{ background: config.bj, fontFamily: getFontFamily(fontFamily) }}
+      >
         <QuestionBar
           mode={mode}
           fontFamily={fontFamily}

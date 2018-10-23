@@ -175,5 +175,10 @@
   "to-report": "举报",
   "be-visit": "被浏览",
   "question-list": "问题",
-  "follow-special": "关注专题"
+  "follow-special": "关注专题",
+  "followed": "已赞同",
+  "followto": "赞同",
+  "view-other": "查看其他",
+  "answer-c": "个回答",
+  "more-answer": "更多回答"
 }

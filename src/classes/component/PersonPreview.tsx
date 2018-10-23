@@ -172,7 +172,7 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
     if (!visible) {
       return null
     }
-    const { fontFamily, language } = this.props
+    const { fontFamily, language, mode } = this.props
     const config = this.getConfig()
     if (isLoading) {
       return (

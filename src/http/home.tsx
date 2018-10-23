@@ -139,6 +139,59 @@ export interface IQuestionPreviewResponse {
   visitCount: number
 }
 
+export interface IAnswerListParams {
+  answerId?: string
+  questionId: string
+  userId?: string
+  maxId?: string
+  pageSize: number
+  allAnswerCount: boolean
+}
+
+export interface IAnswerListAnswerModel {
+  collectCount: number
+  commentCount: number
+  content: string
+  createdAt: string
+  followCount: number
+  id: string
+  isCollect: boolean
+  isFollow: boolean
+  readCount: number
+  state: EPostDetailState
+  title: string
+}
+
+export interface IAnswerListSpecialModel {
+  avatar: string
+  id: string
+  title: string
+}
+
+export interface IAnswerListUserModel {
+  avatar: string
+  id: string
+  name: string
+  whatIsUp: string
+  answerCount?: number
+  cover?: string
+  followerCount?: number
+  isFollow?: boolean
+  postCount?: number
+}
+
+export interface IAnswerListModel {
+  answer: IAnswerListAnswerModel
+  special: IAnswerListSpecialModel
+  user: IAnswerListUserModel
+}
+
+export interface IAnswerListResponse {
+  answer: IAnswerListModel
+  answerCount: number
+  list: Array<IAnswerListModel>
+}
+
 /**
  * 获取Banner图
  * @param params 
@@ -148,11 +201,11 @@ export function findBanner(
   params: IFindBannerParams,
   callback: (err: string, data?: Array<IFindBannerResponse>) => void,
 ): void {
-  http.post(postApi, 'Post.Banner', params, (err, data) => {
+  http.post(postApi, 'Post.Banner', params, (err, result) => {
     if (err) {
       callback(err)
     } else {
-      callback(undefined, data as Array<IFindBannerResponse>)
+      callback(undefined, result as Array<IFindBannerResponse>)
     }
   })
 }
@@ -166,11 +219,11 @@ export function findSpecial(
   params: IFindSpecialParams,
   callback: (err: string, data?: Array<IFindSpecialResponse>) => void,
 ): void {
-  http.post(postApi, 'Special.Recommend', params, (err, data) => {
+  http.post(postApi, 'Special.Recommend', params, (err, result) => {
     if (err) {
       callback(err)
     } else {
-      callback(undefined, data as Array<IFindSpecialResponse>)
+      callback(undefined, result as Array<IFindSpecialResponse>)
     }
   })
 }
@@ -184,11 +237,11 @@ export function findList(
   params: IFindListParams,
   callback: (err: string, data?: Array<IFindListResponse>) => void
 ): void {
-  http.post(postApi, 'Post.List', params, (err, data) => {
+  http.post(postApi, 'Post.List', params, (err, result) => {
     if (err) {
       callback(err)
     } else {
-      callback(undefined, data as Array<IFindListResponse>)
+      callback(undefined, result as Array<IFindListResponse>)
     }
   })
 }
@@ -202,11 +255,11 @@ export function listPreview(
   params: IListPreviewParams,
   callback: (err: string, data?: IListPreviewResponse) => void
 ): void {
-  http.post(postApi, 'User.ListPreview', params, (err, data) => {
+  http.post(postApi, 'User.ListPreview', params, (err, result) => {
     if (err) {
       callback(err)
     } else {
-      callback(undefined, data[0] as IListPreviewResponse)
+      callback(undefined, result[0] as IListPreviewResponse)
     }
   })
 }
@@ -220,11 +273,11 @@ export function createPost(
   params: IPostCreateParams,
   callback:(err: string, result?: IPostCreateResponse) => void
 ): void {
-  http.post(postApi, 'Post.Create', params, (err, data) => {
+  http.post(postApi, 'Post.Create', params, (err, result) => {
     if (err) {
       callback(err)
     } else {
-      callback(undefined, data[0] as IPostCreateResponse)
+      callback(undefined, result[0] as IPostCreateResponse)
     }
   })
 }
@@ -238,11 +291,11 @@ export function postDetail(
   params: IPostDetailParams,
   callback: (err: string, data?: IPostDetailResponse) => void
 ): void {
-  http.post(postApi, 'Post.Detail', params, (err, data) => {
+  http.post(postApi, 'Post.Detail', params, (err, result) => {
     if (err) {
       callback(err)
     } else {
-      callback(undefined, data[0] as IPostDetailResponse)
+      callback(undefined, result[0] as IPostDetailResponse)
     }
   })
 }
@@ -256,11 +309,29 @@ export function questionPreview(
   params: IQuestionPreviewParams,
   callback: (err: string, data?: IQuestionPreviewResponse) => void
 ): void {
-  http.post(postApi, 'Question.Preview', params, (err, data) => {
+  http.post(postApi, 'Question.Preview', params, (err, result) => {
     if (err) {
       callback(err)
     } else {
-      callback(undefined, data[0] as IQuestionPreviewResponse)
+      callback(undefined, result[0] as IQuestionPreviewResponse)
+    }
+  })
+}
+
+/**
+ * 获取回答的信息 (具体回答/回答列表)
+ * @param params 
+ * @param callback 
+ */
+export function answerList(
+  params: IAnswerListParams,
+  callback: (err: string, data?: IAnswerListResponse) => void
+): void {
+  http.post(postApi, 'Question.AnswerList', params, (err, result) => {
+    if (err) {
+      callback(err)
+    } else {
+      callback(undefined, result[0] as IAnswerListResponse)
     }
   })
 }
