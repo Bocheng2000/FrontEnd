@@ -14,6 +14,9 @@ import * as instance from '../../utils/instance'
 import { ILoginResponse } from '../../http/user'
 import localWithKey from '../../language';
 import AnswerItem from './component/answerItem'
+import AboutAuth from './component/aboutAuth'
+import { createOrDel, EFollowType } from '../../http/follow'
+import CommentModel from '../component/commentModal'
 
 const styles = {
   clear: {
@@ -42,6 +45,8 @@ class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailStat
   private questionId: string
   private answerId: string
   private timer: any
+  private commentModal: CommentModel
+  private isRequest: boolean = false
 
   constructor(props: IAnswerDetailProps) {
     super(props)
@@ -55,15 +60,11 @@ class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailStat
 
   componentDidMount() {
     this.timer = setTimeout(() => {
-      let userId
-      let me = instance.getValueByKey('info')
-      if (me) {
-        userId = (me as ILoginResponse).id
-      }
+      let user = this.getUser()
       const params = {
         answerId: this.answerId,
         questionId: this.questionId,
-        userId,
+        userId: user ? user.id : undefined,
         pageSize: 2,
         allAnswerCount: true
       }
@@ -111,6 +112,51 @@ class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailStat
     })
   }
 
+  followObject(objectId: string, type: EFollowType, success: () => void) {
+    if (this.isRequest) return
+    const user = this.getUser()
+    if (!user) {
+      const { language } = this.props
+      showTips(localWithKey(language, 'login-first'))
+      return
+    }
+    this.isRequest = true
+    createOrDel({
+      id: user.id,
+      token: user.token,
+      objectId,
+      type,
+    }, (err) => {
+      this.isRequest = false
+      if (err) {
+        showTips(err)
+      } else {
+        success()
+      }
+    })
+  }
+
+  followUserHandler() {
+    const { info } = this.state
+    const { answer } = info
+    const { user } = answer
+    this.followObject(user.id, EFollowType.USER, () => {
+      this.setState({
+        info: {
+          ...info,
+          answer: {
+            ...answer,
+            user: {
+              ...user,
+              isFollow: !user.isFollow,
+              followerCount: user.isFollow ? user.followerCount - 1 : user.followerCount + 1,
+            }
+          }
+        }
+      })
+    })
+  }
+
   getConfig(mode?: ESystemTheme) {
     if (mode === undefined)
       mode = this.props.mode
@@ -123,6 +169,7 @@ class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailStat
         color: '#c8c8c8',
         pre: '#2F2F2F',
         blockquote: '#1F1F1F',
+        btn: 'q-button-un-night'
       }
     } else {
       res = {
@@ -132,9 +179,21 @@ class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailStat
         color: '#333333',
         pre: '#F1F1F1',
         blockquote: '#d0e5f2',
+        btn: 'q-button-un-day'
       }
     }
     return res
+  }
+
+  messageHandler() {
+
+  }
+
+  getUser(): ILoginResponse {
+    let me = instance.getValueByKey('info')
+    if (me) 
+      return me as ILoginResponse
+    return undefined
   }
 
   renderOtherAnswer(config: any) {
@@ -172,6 +231,8 @@ class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailStat
     if (!info) {
       return null
     }
+    const { answer: { user } } = info
+    const { language } = this.props
     return (
       <Row
         gutter={24}
@@ -185,7 +246,15 @@ class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailStat
           {this.renderTargetAnswer(config)}
           {this.renderOthers(config)}
         </Col>
-        <Col span={7} style={styles.clear}>col-4</Col>
+        <Col span={7} style={styles.clear}>
+          <AboutAuth
+            user={user}
+            language={language}
+            config={config}
+            followHandler={() => this.followUserHandler()}
+            messageHandler={() => this.messageHandler()}
+          />
+        </Col>
       </Row>
     )
   }
@@ -223,7 +292,7 @@ class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailStat
 
   render() {
     const config = this.getConfig()
-    const { mode, fontFamily } = this.props
+    const { mode, fontFamily, language } = this.props
     return (
       <div
         id="answer"
@@ -233,8 +302,10 @@ class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailStat
           mode={mode}
           fontFamily={fontFamily}
           questionId={this.questionId}
+          commentHandler={(number) => this.commentModal.show({ objectId: this.questionId, commentCount: number })}
         />
         {this.renderBody(config)}
+        <CommentModel ref={e => this.commentModal = e} mode={mode} language={language}/>
       </div>
     )
   }

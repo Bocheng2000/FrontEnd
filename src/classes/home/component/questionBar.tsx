@@ -7,15 +7,22 @@ import * as instance from '../../../utils/instance'
 import { ILoginResponse } from '../../../http/user'
 import Loading from '../../component/loading'
 import { showTips } from '../../../utils/tips'
-import localWithKey from '../../../language';
+import localWithKey from '../../../language'
 import { parseNumber } from '../../../utils/utils'
 import SpecialPreview from '../../component/specialPreview'
+import { createOrDel, EFollowType } from '../../../http/follow'
 
 export interface IQuestionBarProps {
   mode?: ESystemTheme
   fontFamily?: EFontFamily
   language?: ELanguageEnv
   questionId: string
+  followHandler?: (isFollow: boolean) => void
+  writeHandler?: () => void
+  commentHandler?: (count: number) => void
+  shareHandler?: () => void
+  inviteHandler?: () => void
+  reportHandler?: () => void
 }
 
 interface IQuestionBarState {
@@ -25,6 +32,7 @@ interface IQuestionBarState {
 export default class QuestionBar extends React.Component<IQuestionBarProps, IQuestionBarState> {
   private timer: any
   private special: SpecialPreview
+  private isRequest: boolean = false
   constructor(props: IQuestionBarProps) {
     super(props)
     this.state = {
@@ -64,6 +72,39 @@ export default class QuestionBar extends React.Component<IQuestionBarProps, IQue
     })
   }
 
+  followOrNot() {
+    if (this.isRequest) return
+    let user = instance.getValueByKey('info')
+    if (!user) {
+      const { language } = this.props
+      showTips(localWithKey(language, 'login-first'))
+      return
+    }
+    this.isRequest = true
+    user = user as ILoginResponse
+    const { question } = this.state
+    createOrDel({
+      id: user.id,
+      token: user.token,
+      objectId: question.id,
+      type: EFollowType.QUESTION,
+    }, (err) => {
+      this.isRequest = false
+      if (err) 
+        showTips(err)
+      else {
+        this.setState({
+          question: {
+            ...question,
+            isFollow: !question.isFollow,
+            followerCount: question.isFollow ? question.followerCount - 1 : question.followerCount + 1,
+          }
+        })
+        const { followHandler } = this.props
+        followHandler && followHandler(!question.isFollow)
+      }
+    }) 
+  }
 
   getConfig() {
     const { mode } = this.props
@@ -101,7 +142,7 @@ export default class QuestionBar extends React.Component<IQuestionBarProps, IQue
       return <Loading />
     }
     const config = this.getConfig()
-    const { fontFamily, mode, language } = this.props
+    const { fontFamily, mode, language, commentHandler } = this.props
     return (
       <div
         className="q-nav"
@@ -128,14 +169,17 @@ export default class QuestionBar extends React.Component<IQuestionBarProps, IQue
                 : null
             }
             <div className="q-tool">
-              <span className={`q-b ${question.isFollow ? config.btn : 'q-button'}`}>
+              <span
+                onClick={() => this.followOrNot()}
+                className={`q-b ${question.isFollow ? config.btn : 'q-button'}`}
+              >
                 {localWithKey(language, question.isFollow ? 'unfollow-question' : 'follow-question')}
               </span>
               <span className={`q-b ${config.btn}`}>
                 <i className="iconfont icon-bi q-icon" />
                 {localWithKey(language, 'write-answer')}
               </span>
-              <span className="q-item">
+              <span className="q-item" onClick={() => commentHandler && commentHandler(question.commentCount)}>
                 <i className="iconfont icon-comment q-icon" />
                 {`${parseNumber(question.commentCount)} ${localWithKey(language, 'comment-count')}`}
               </span>

@@ -35,4 +35,4 @@ export const animate_delay: number = 1000
 /**
  * 每次加载的数量
  */
-export const page_size: number = 20
+export const page_size: number = 10

@@ -180,5 +180,15 @@
   "followto": "赞同",
   "view-other": "查看其他",
   "answer-c": "个回答",
-  "more-answer": "更多回答"
+  "more-answer": "更多回答",
+  "about-user": "关于作者",
+  "write-comment": "写下您的评论",
+  "comment-deleted": "该评论已删除",
+  "reply": "回复",
+  "month-ago": "月前",
+  "week-ago": "周前",
+  "day-ago": "天前",
+  "hour-ago": "小时前",
+  "monute-ago": "分钟前",
+  "just-now": "刚刚"
 }

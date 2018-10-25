@@ -1,3 +1,8 @@
+import * as moment from 'moment'
+import * as instance from './instance'
+import { IStoreState } from '../reducer'
+import localWithKey from '../language';
+
 /**
  * isPhone
  * @param phone 
@@ -46,4 +51,35 @@ export function parseNumber(count: number): string {
   if (count <= 100000)
     return `${(count / 1000).toFixed(1)}k`
   return `${(count / 1000000).toFixed(1)}m`
+}
+
+/**
+ * 换算时间差
+ * @param date 
+ */
+export function dateDiff(date: string): string {
+  const store = instance.getValueByKey('__store__').getState() as IStoreState
+  const { language } = store.main.system
+  const tsMoment = moment(date)
+  if (!tsMoment.isValid()) return ""
+  const now = Date.now()
+  const interval = now - tsMoment.valueOf()
+  if (interval < 0) return ""
+  const minute = 1000 * 60
+  const hour = minute * 60
+  const day = hour * 24
+  const week = day * 7
+  const month = day * 30
+  const minC = Math.floor(interval / minute)
+  const hourC = Math.floor(interval / hour)
+  const dayC = Math.floor(interval / day)
+  const weekC = Math.floor(interval / week)
+  const monthC = Math.floor(interval / month)
+  if (monthC >= 1 && monthC <= 3) return `${monthC} ${localWithKey(language, 'month-ago')}`
+  if (weekC >= 1 && weekC <= 3) return `${weekC} ${localWithKey(language, 'week-ago')}`
+  if (dayC >= 1 && dayC <= 6) return `${dayC} ${localWithKey(language, 'day-ago')}`
+  if (hourC >= 1 && hourC <= 23) return `${hourC} ${localWithKey(language, 'hour-ago')}`
+  if (minC >= 1 && minC <= 59) return `${minC} ${localWithKey(language, 'minute-ago')}`
+  if (interval >= 0 && interval <= minute) return localWithKey(language, 'just-now')
+  return tsMoment.format("YYYY-MM-DD")
 }

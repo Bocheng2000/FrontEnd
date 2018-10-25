@@ -5,7 +5,7 @@ import reducers from '../reducer'
 
 export default function () {
   (function writeLog() {
-    const no = `               May the world with no bug`
+    const no = `             May the program with no bug`
     const log = `             
     ┌───┐   ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐ ┌───┬───┬───┐
     │Esc│   │ F1│ F2│ F3│ F4│ │ F5│ F6│ F7│ F8│ │ F9│F10│F11│F12│ │P/S│S L│P/B│  ┌┐    ┌┐    ┌┐
