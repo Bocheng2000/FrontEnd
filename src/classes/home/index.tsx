@@ -27,26 +27,32 @@ const styles = {
 }
 
 class Home extends React.Component<IHomeProps> {
+
+
   render() {
     const { fontFamily, mode, language } = this.props
     return (
-      <div className="base-body">
-        <Banner />
-        <Row
-          id="home-body"
-          gutter={24}
-          type="flex"
-          justify="space-between"
-          style={styles.overrideMargin}
-        >
-          <Col span={16} style={styles.overridePadding}>
-            <Special fontFamily={fontFamily} mode={mode} language={language} />
-            <PostList fontFamily={fontFamily} mode={mode} language={language} />
+      <div
+        style={{ background: mode === ESystemTheme.night ? '#2F2F2F' : '#F6F6F6' }}
+      >
+        <div className="base-body">
+          <Banner />
+          <Row
+            id="home-body"
+            gutter={24}
+            type="flex"
+            justify="space-between"
+            style={styles.overrideMargin}
+          >
+            <Col span={16} style={styles.overridePadding}>
+              <Special fontFamily={fontFamily} mode={mode} language={language} />
+              <PostList fontFamily={fontFamily} mode={mode} language={language} />
+            </Col>
+            <Col span={7} style={styles.overridePadding}>
+              ddddd
           </Col>
-          <Col span={7} style={styles.overridePadding}>
-            ddddd
-          </Col>
-        </Row>
+          </Row>
+        </div>
       </div>
     )
   }

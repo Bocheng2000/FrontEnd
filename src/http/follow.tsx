@@ -15,6 +15,23 @@ export interface ICreateOrDelParams extends IBaseAuth {
   type: EFollowType
 }
 
+export interface IListParams {
+  id: string
+  userId?: string
+  maxId?: string
+  pageSize: number
+}
+
+export interface IListResponse {
+  followId: string
+  answerCount: number
+  avatar: string
+  followerCount: number
+  id: string
+  isFollow: boolean
+  name: string
+}
+
 /**
  * follow - not
  * @param params 
@@ -30,4 +47,22 @@ export function createOrDel(
     params,
     err => callback(err)
   )
+}
+
+/**
+ * Object的 follower 列表
+ * @param params 
+ * @param callback 
+ */
+export function list(
+  params: IListParams,
+  callback: (err: string, data?: Array<IListResponse>) => void
+): void {
+  http.post(postApi, 'Follow.List', params, (err, result) => {
+    if (err) {
+      callback(err)
+    } else {
+      callback(undefined, result as Array<IListResponse>)
+    }
+  })
 }

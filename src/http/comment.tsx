@@ -56,9 +56,11 @@ export interface ICommentModel {
   isLike: boolean
   likeCount: number
   name: string
+  rootId: string
   state: ECommentState,
   type: ECommentType
   userId: string
+  ignore?: boolean
 }
 
 export interface ICommentChildModel {
@@ -70,6 +72,14 @@ export interface IListResponse {
   comment: ICommentModel
   children?: Array<ICommentChildModel>
 }
+
+export interface INextLvlParams {
+  userId?: string
+  rootId: string
+  sinceId?: string
+  pageSize: number
+}
+
 
 /**
  * 创建评论
@@ -115,5 +125,23 @@ export function list(
       callback(err)
     else
       callback(undefined, result as Array<IListResponse> )
+  })
+}
+
+/**
+ * 加载下一级的评论
+ * @param params 
+ * @param callback 
+ */
+export function nextLvl(
+  params: INextLvlParams,
+  callback: (err: string, data?: Array<ICommentChildModel>) => void
+): void {
+  http.post(postApi, 'Comment.NextLvl', params, (err, result) => {
+    if (err) {
+      callback(err)
+    } else {
+      callback(undefined, result as Array<ICommentChildModel>)
+    }
   })
 }

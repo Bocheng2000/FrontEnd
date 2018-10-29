@@ -23,7 +23,10 @@ export default class AboutAuth extends React.Component<IAboutAuthProps> {
         id="a-u"
         className="a-u-m"
         style={{ background: config.block }}>
-        <div className="a-u-t" style={{ borderBottom: config.border }}>
+        <div
+          className="a-u-t"
+          style={{ borderBottom: config.border, color: config.color }}
+        >
           {localWithKey(language, 'about-user')}
         </div>
         <img

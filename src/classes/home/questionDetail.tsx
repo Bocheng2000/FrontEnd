@@ -24,6 +24,7 @@ import PersonPreview from '../component/PersonPreview'
 import Report, { IReportOptions } from '../component/report'
 import { EReportType } from '../../http/report'
 import Relation from './component/relation'
+import Sofa from '../component/sofa'
 
 const styles = {
   clear: {
@@ -36,7 +37,7 @@ const styles = {
   }
 }
 
-export interface IAnswerDetailProps {
+export interface IQuestionDetailProps {
   match?: match
   fontFamily: EFontFamily
   fontColor: EFontColor
@@ -44,13 +45,12 @@ export interface IAnswerDetailProps {
   mode: ESystemTheme
 }
 
-interface IAnswerDetailState {
+interface IQuestionDetailState {
   info: IAnswerListResponse
 }
 
-class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailState> {
+class QuestionDetail extends React.Component<IQuestionDetailProps, IQuestionDetailState> {
   private questionId: string
-  private answerId: string
   private timer: any
   private commentModal: CommentModel
   private isRequest: boolean = false
@@ -58,43 +58,30 @@ class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailStat
   private preview: PersonPreview
   private report: Report
 
-  constructor(props: IAnswerDetailProps) {
+  constructor(props: IQuestionDetailProps) {
     super(props)
     const params: any = props.match.params
     this.questionId = params.qid
-    this.answerId = params.aid
     this.state = {
       info: undefined
     }
   }
 
   componentDidMount() {
-    this.timer = setTimeout(() => {
-      let user = this.getUser()
-      const params = {
-        answerId: this.answerId,
-        questionId: this.questionId,
-        userId: user ? user.id : undefined,
-        pageSize: 2,
-        allAnswerCount: true
-      }
-      answerList(params, (err, data) => {
-        if (err) {
-          showTips(err)
-          setTimeout(() => {
-            instance.getValueByKey('history').replace(`/q/${this.questionId}`)
-          }, 200)
-        } else {
-          this.setState({ info: data })
-        }
-      })
-    }, animate_delay)
+    this.findQuestion()
   }
 
-  componentWillReceiveProps(nextProps: IAnswerDetailProps) {
+  componentWillReceiveProps(nextProps: IQuestionDetailProps) {
     const { mode } = this.props
     if (nextProps.mode !== mode) {
       this.configUI(nextProps.mode)
+    }
+    const params: any = nextProps.match.params
+    const questionId = params.qid
+    if (questionId !== this.questionId) {
+      console.log('11111')
+      this.questionId = questionId
+      this.findQuestion()
     }
   }
 
@@ -120,6 +107,28 @@ class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailStat
       'border-left-color': config.blockquote,
       'color': config.color
     })
+  }
+
+  findQuestion() {
+    this.timer = setTimeout(() => {
+      let user = this.getUser()
+      const params = {
+        questionId: this.questionId,
+        userId: user ? user.id : undefined,
+        pageSize: 2,
+        allAnswerCount: true
+      }
+      answerList(params, (err, data) => {
+        if (err) {
+          showTips(err)
+          setTimeout(() => {
+            instance.getValueByKey('history').replace(`/q/${this.questionId}`)
+          }, 200)
+        } else {
+          this.setState({ info: data })
+        }
+      })
+    }, animate_delay)
   }
 
   toFollowHandler(id: string, lvl: number) {
@@ -344,48 +353,11 @@ class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailStat
     })
   }
 
-  renderOtherAnswer(config: any) {
-    const { language } = this.props
-    const { info: { answerCount } } = this.state
-    if (answerCount === 0) {
-      return null
-    }
-    return (
-      <Link to={`/q/${this.questionId}`}>
-        <div
-          className="shadow other-answer"
-          style={{ background: config.block }}
-        >{`${localWithKey(language, 'view-other')} ${answerCount} ${localWithKey(language, 'answer-c')}`}</div>
-      </Link>
-    )
-  }
-
-  renderTargetAnswer(config: any) {
-    const { mode, language } = this.props
-    const { info: { answer: { user, answer } } } = this.state
-    return (
-      <AnswerItem
-        mode={mode}
-        language={language}
-        answer={answer}
-        user={user}
-        config={config}
-        showPreview={(evt, userId) => this.showPersonPreview(evt, userId)}
-        hidePreivew={() => this.preview.hide()}
-        followHandler={() => this.toFollowHandler(answer.id, 0)}
-        commentHandler={() => this.toCommentHandler(answer, 0)}
-        collectHandler={() => this.toCollectHandler(answer.id, 0)}
-        reportHandler={() => this.toReport(answer.id, EReportType.POST)}
-      />
-    )
-  }
-
   renderBody(config: any) {
     const { info } = this.state
     if (!info) {
       return null
     }
-    const { answer: { user } } = info
     const { language, mode, fontFamily } = this.props
     return (
       <Row
@@ -396,8 +368,6 @@ class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailStat
         style={styles.container}
       >
         <Col id="answer-detail" span={16} style={styles.clear}>
-          {this.renderOtherAnswer(config)}
-          {this.renderTargetAnswer(config)}
           {this.renderOthers(config)}
           <PersonPreview
             ref={e => this.preview = e}
@@ -407,13 +377,6 @@ class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailStat
           />
         </Col>
         <Col span={7} style={styles.clear}>
-          <AboutAuth
-            user={user}
-            language={language}
-            config={config}
-            followHandler={() => this.followUserHandler()}
-            messageHandler={() => this.messageHandler()}
-          />
           <Affix offsetTop={66} >
             <Relation
               language={language}
@@ -431,37 +394,26 @@ class AnswerDetail extends React.Component<IAnswerDetailProps, IAnswerDetailStat
     const { info } = this.state
     if (!info) return null
     const { list } = info
-    if (!list || list.length === 0) return null
+    if (!list || list.length === 0) {
+      return <Sofa language={this.props.language} />
+    }
     const { mode, language } = this.props
-    return (
-      <div>
-        <div
-          className="other-answer a-a-line"
-          style={{ background: config.block }}
-        >
-          <span style={{ marginRight: 20, marginLeft: 30 }} />
-          {localWithKey(language, 'more-answer')}
-          <span style={{ marginLeft: 20, marginRight: 30 }} />
-        </div>
-        {list.map(({ answer, user }) => (
-          <AnswerItem
-            key={answer.id}
-            mode={mode}
-            language={language}
-            answer={answer}
-            user={user}
-            config={config}
-            showPreview={(evt, userId) => this.showPersonPreview(evt, userId)}
-            hidePreivew={() => this.preview.hide()}
-            followHandler={() => this.toFollowHandler(answer.id, 1)}
-            commentHandler={() => this.toCommentHandler(answer, 1)}
-            collectHandler={() => this.toCollectHandler(answer.id, 1)}
-            reportHandler={() => this.toReport(answer.id, EReportType.POST)}
-          />
-        ))}
-        {this.renderOtherAnswer(config)}
-      </div>
-    )
+    return (list.map(({ answer, user }) => (
+      <AnswerItem
+        key={answer.id}
+        mode={mode}
+        language={language}
+        answer={answer}
+        user={user}
+        config={config}
+        showPreview={(evt, userId) => this.showPersonPreview(evt, userId)}
+        hidePreivew={() => this.preview.hide()}
+        followHandler={() => this.toFollowHandler(answer.id, 1)}
+        commentHandler={() => this.toCommentHandler(answer, 1)}
+        collectHandler={() => this.toCollectHandler(answer.id, 1)}
+        reportHandler={() => this.toReport(answer.id, EReportType.POST)}
+      />
+    )))
   }
 
   render() {
@@ -517,4 +469,4 @@ function mapStateToProps({
   }
 }
 
-export default connect(mapStateToProps)(AnswerDetail)
+export default connect(mapStateToProps)(QuestionDetail)

@@ -5,7 +5,7 @@ import Setting from '../setting'
 import Home from '../home'
 import PostDetail from '../home/postDetail'
 import AnswerDetail from '../home/answerDetail'
-
+import QuestionDetail from '../home/questionDetail'
 
 class Main extends React.Component {
   render() {
@@ -17,7 +17,7 @@ class Main extends React.Component {
           {/* <Route path="/t" exact component={Setting} /> */}
           <Route path="/p/:id" component={PostDetail} /> {/*等待实现*/}
           <Route path="/q/:qid/:aid" component={AnswerDetail} /> {/*等待实现*/}
-          {/* <Route path="/q/:qid" component={AnswerDetail} /> 等待实现 */}
+          <Route path="/q/:qid" component={QuestionDetail} />
           <Route path="/s" exact component={Setting} />
           <Route path="/" exact component={Home} />
           {/* <Route path="/u/:id" component={PostDetail} /> 等待实现 */}

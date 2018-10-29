@@ -192,6 +192,17 @@ export interface IAnswerListResponse {
   list: Array<IAnswerListModel>
 }
 
+export interface IRelationParams {
+  id: string
+  pageSize: number
+}
+
+export interface IRelationReponse {
+  count: number
+  id: string
+  title: string
+}
+
 /**
  * 获取Banner图
  * @param params 
@@ -332,6 +343,22 @@ export function answerList(
       callback(err)
     } else {
       callback(undefined, result[0] as IAnswerListResponse)
+    }
+  })
+}
+
+/**
+ * 获取相关的问题
+ */
+export function relation(
+  params: IRelationParams,
+  callback: (err: string, data?: Array<IRelationReponse>) => void
+): void {
+  http.post(postApi, 'Question.Relation', params, (err, result) => {
+    if (err) {
+      callback(err)
+    } else {
+      callback(undefined, result as Array<IRelationReponse>)
     }
   })
 }

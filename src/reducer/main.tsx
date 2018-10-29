@@ -44,7 +44,6 @@ function getConfig() {
     fontColor: !fontColor ? EFontColor.day : parseInt(fontColor),
     language: !language ? ELanguageEnv.zhHans : parseInt(language)
   }
-  $('body').css('background', getThemeColor(o.mode))
   return o
 }
 

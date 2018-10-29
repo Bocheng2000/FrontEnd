@@ -1,0 +1,66 @@
+#emoji {
+  border-radius: 4px;
+  overflow: hidden;
+  .dot {
+    text-align: center;
+    padding: 8px 0;
+    .dot-base {
+      .transition; 
+      width: 8px;
+      height: 8px;
+      display: inline-block;
+      border-radius: 4px;
+      background: #bbbbbb;
+      margin: 0 4px;
+    }
+    .dot-active {
+      background: #666666;
+    }
+    .dot-base:hover {
+      background: #666666;
+    }
+  }
+  .dot-day::before {
+    .transition;
+    position: absolute;
+    bottom: 1px;
+    left: calc(50% - 9px);
+    content: "";
+    display: inline-block;
+    border-top: 9px solid #EEEEEE;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+  }
+  .dot-night::before {
+    .transition;
+    position: absolute;
+    bottom: 1px;
+    left: calc(50% - 9px);
+    content: "";
+    display: inline-block;
+    border-top: 9px solid #202020;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+  }
+  .emoji-container {
+    width: 300px;
+    overflow: hidden;
+    display: flex;
+    .emoji-mask {
+      text-align: center;
+      display: flex;
+      position: relative;
+      .transition; 
+      .tab {
+        width: 300px;
+        padding: 5px;
+        img {
+          width: 24px;
+          height: 24px;
+          margin: 2px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

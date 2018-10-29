@@ -113,7 +113,6 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
 
   private followOrNot() {
     if (this.isRequest) return
-    this.isRequest = true
     const { language } = this.props
     if (!this.userId) {
       showTips(localWithKey(language, 'login-first'))
@@ -121,6 +120,7 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
     }
     const { targetId, handler } = this.state
     const user = instance.getValueByKey('info') as ILoginResponse
+    this.isRequest = true
     createOrDel({
       id: user.id,
       token: user.token,
@@ -184,7 +184,7 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
             top: `${this.y}px`,
             left: `${this.x}px`
           }}
-          onMouseEnter={() => this.show({ y: this.y, targetId, x: this.x, handler})}
+          onMouseEnter={() => this.show({ y: this.y, targetId, x: this.x, handler })}
           onMouseLeave={() => this.hide()}
         >
           <Loading />
@@ -246,7 +246,11 @@ export default class PersonPreview extends React.Component<IPersonPreviewProps, 
           </div>
         </div>
         <div className="preview-footer">
-          <div className="btn follow" onClick={() => this.followOrNot()}>
+          <div
+            className="btn follow"
+            style={(this.userId && this.userId === info.id) ? { cursor: 'not-allowed' } : undefined}
+            onClick={(this.userId && this.userId === info.id) ? null : () => this.followOrNot()}
+          >
             <i className={`iconfont ${info.isFollow ? 'icon-jian' : 'icon-jia'} icon`} />
             {localWithKey(language, info.isFollow ? 'unfollow' : 'follow-ta')}
           </div>

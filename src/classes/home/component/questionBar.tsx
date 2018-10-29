@@ -11,8 +11,10 @@ import localWithKey from '../../../language'
 import { parseNumber } from '../../../utils/utils'
 import SpecialPreview from '../../component/specialPreview'
 import { createOrDel, EFollowType } from '../../../http/follow'
+import FollowerModal from '../../component/followerModal'
 
 export interface IQuestionBarProps {
+  ref?: (e: QuestionBar) => void
   mode?: ESystemTheme
   fontFamily?: EFontFamily
   language?: ELanguageEnv
@@ -32,6 +34,7 @@ interface IQuestionBarState {
 export default class QuestionBar extends React.Component<IQuestionBarProps, IQuestionBarState> {
   private timer: any
   private special: SpecialPreview
+  private followModal: FollowerModal
   private isRequest: boolean = false
   constructor(props: IQuestionBarProps) {
     super(props)
@@ -48,6 +51,12 @@ export default class QuestionBar extends React.Component<IQuestionBarProps, IQue
 
   componentWillUnmount() {
     this.timer && clearTimeout(this.timer)
+  }
+
+  public plusCommentCount() {
+    const { question } = this.state
+    question.commentCount++
+    this.setState({ question })
   }
 
   findQuestionInfo() {
@@ -142,7 +151,10 @@ export default class QuestionBar extends React.Component<IQuestionBarProps, IQue
       return <Loading />
     }
     const config = this.getConfig()
-    const { fontFamily, mode, language, commentHandler } = this.props
+    const {
+      fontFamily, mode, language, commentHandler,
+      reportHandler, shareHandler,
+    } = this.props
     return (
       <div
         className="q-nav"
@@ -183,7 +195,7 @@ export default class QuestionBar extends React.Component<IQuestionBarProps, IQue
                 <i className="iconfont icon-comment q-icon" />
                 {`${parseNumber(question.commentCount)} ${localWithKey(language, 'comment-count')}`}
               </span>
-              <span className="q-item">
+              <span className="q-item" onClick={() => shareHandler && shareHandler()}>
                 <i className="iconfont icon-tubiaozhizuo- q-icon" />
                 {localWithKey(language, 'to-share')}
               </span>
@@ -191,14 +203,18 @@ export default class QuestionBar extends React.Component<IQuestionBarProps, IQue
                 <i className="iconfont icon-star q-icon" />
                 {localWithKey(language, 'invite-answer')}
               </span>
-              <span className="q-item">
+              <span className="q-item" onClick={() => reportHandler && reportHandler()}>
                 <i className="iconfont icon-icon_tip_off q-icon" />
                 {localWithKey(language, 'to-report')}
               </span>
             </div>
           </div>
           <div className="q-info">
-            <div className="q-item" style={{ borderRight: config.border }}>
+            <div
+              className="q-item"
+              style={{ borderRight: config.border }}
+              onClick={() => this.followModal.show({ objectId: question.id })}
+            >
               <div className="q-tag">
                 {localWithKey(language, 'follower-count')}
               </div>
@@ -218,6 +234,12 @@ export default class QuestionBar extends React.Component<IQuestionBarProps, IQue
         </div>
         <SpecialPreview
           ref={e => this.special = e}
+          mode={mode}
+          language={language}
+          fontFamily={fontFamily}
+        />
+        <FollowerModal
+          ref={e => this.followModal = e}
           mode={mode}
           language={language}
           fontFamily={fontFamily}

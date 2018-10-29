@@ -57,12 +57,14 @@ export default class PostList extends React.Component<IPostListProps, IPostListS
         border: '1px solid #F0F0F0',
         color: '#333333',
         tool: '#b4b4b4',
+        block: '#FFFFFF'
       }
     } else {
       res = {
         border: '1px solid #2F2F2F',
         color: '#c8c8c8',
         tool: '#969696',
+        block: '#3F3F3F'
       }
     }
     return res
@@ -136,7 +138,7 @@ export default class PostList extends React.Component<IPostListProps, IPostListS
     this.preview.hide()
   }
 
-  renderItems(config: any, e: IFindListResponse) {
+  renderItems(config: any, e: IFindListResponse, hideBorder: boolean) {
     let to
     if (e.questionId) {
       to = `/q/${e.questionId}/${e.id}`
@@ -146,7 +148,7 @@ export default class PostList extends React.Component<IPostListProps, IPostListS
     return (
       <li
         className="item"
-        style={{ borderTop: config.border }}
+        style={hideBorder ? undefined : { borderTop: config.border }}
         key={e.id}
       >
         <div className="content">
@@ -204,7 +206,7 @@ export default class PostList extends React.Component<IPostListProps, IPostListS
   renderLoading(mode: ESystemTheme) {
     return (
       <div style={{ marginBottom: '20px' }} >
-        <PostLoading mode={mode} />
+        <PostLoading mode={mode} style={{ borderTop: 'none' }}/>
         <PostLoading mode={mode} />
         <PostLoading mode={mode} />
         <PostLoading mode={mode} />
@@ -244,9 +246,9 @@ export default class PostList extends React.Component<IPostListProps, IPostListS
     return (
       <ul
         id="post-list"
-        style={{ fontFamily: getFontFamily(fontFamily) }}
+        style={{ fontFamily: getFontFamily(fontFamily), background: config.block }}
       >
-        {dataSource.map(e => this.renderItems(config, e))}
+        {dataSource.map((e, i) => this.renderItems(config, e, i === 0))}
         {this.renderLoadMore(isLoading, more)}
         <PersonPreview
           ref={e => this.preview = e}

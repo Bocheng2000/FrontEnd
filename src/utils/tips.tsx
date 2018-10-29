@@ -1,5 +1,6 @@
 export enum EShowTipsType {
   success = 0,
+  warning,
   failed,
 }
 
@@ -59,6 +60,8 @@ export function showTips(content: string, type: EShowTipsType = EShowTipsType.fa
   let className
   if (type === EShowTipsType.success) {
     className = 'tips tips-succ'
+  } else if (type === EShowTipsType.warning) {
+    className = 'tips tips-warning'
   } else {
     className = 'tips tips-fail'
   }

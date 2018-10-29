@@ -36,3 +36,18 @@ export const animate_delay: number = 1000
  * 每次加载的数量
  */
 export const page_size: number = 10
+
+/**
+ * emoji 正则
+ */
+export const emoji_regex: RegExp = /\[:[^]]*(.*?):\]/g
+
+/**
+ * at 正则
+ */
+export const at_regex: RegExp = /\@[^\s]]*(.*?)\s/g
+
+/**
+ * tag 正则
+ */
+export const tag_regex: RegExp = /\#[^]]*(.*?)\#/g

@@ -62,7 +62,6 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
         title: localWithKey(language, 'on'),
         high: mode === ESystemTheme.night,
         handler: () => {
-          $('body').css('background', getThemeColor(ESystemTheme.night))
           this.mainAction.updateSystemConfig({
             'mode': ESystemTheme.night,
             'fontColor': EFontColor.night,
@@ -75,7 +74,6 @@ class SettingPanel extends React.Component<ISettingPanelProps, ISettingPanelStat
         title: localWithKey(language, 'off'),
         high: mode === ESystemTheme.day,
         handler: () => {
-          $('body').css('background', getThemeColor(ESystemTheme.day))
           this.mainAction.updateSystemConfig({
             'mode': ESystemTheme.day,
             'fontColor': EFontColor.day,

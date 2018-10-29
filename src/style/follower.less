@@ -1,0 +1,111 @@
+#follower-modal {
+  margin: 0 -10px;
+  .f-header {
+    padding: 0 10px;
+    .display;
+    align-items: center;
+    justify-content: space-between;
+    .f-title {
+      font-size: 20px;
+      line-height: 40px;
+    }
+    .f-close {
+      .transition;
+      color: #FFFFFF;
+      font-size: 28px;
+      position: absolute;
+      right: -40px;
+      cursor: pointer;
+    }
+    .f-close:hover {
+      transform: rotate(90deg);
+    }
+  }
+  .f-body {
+    overflow-y: auto;
+    .f-item {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      .f-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 4px;
+      }
+      .f-content {
+        flex: 1;
+        margin: 0 10px;
+        .f-name {
+          font-size: 18px;
+          font-weight: 600;
+          line-height: 1.6;
+        }
+        .f-desc {
+          margin-top: 5px;
+          color: #8590a6;
+          font-size: 14px;
+        }
+      }
+      .btn {
+        .transition;
+        width: 110px;
+        cursor: pointer;
+        .display;
+        align-items: center;
+        justify-content: center;
+        line-height: 36px;
+        padding: 0 10px;
+        border-radius: 5px;
+      }
+      .follow {
+        background: #48ba39;
+        border: 1px solid #48ba39;
+        color: #FFFFFF;
+      }
+      .follow:hover {
+        background: #3ba52b;
+        border: 1px solid #3ba52b;
+      }
+      .q-button-un-day {
+        border: 1px solid #8c8c8c;
+        color: #8c8c8c;
+      }
+      .q-button-un-day:hover {
+        background: #f8f8fa;
+      }
+      .q-button-un-night {
+        border: 1px solid #2f2f2f;
+        color: #8c8c8c;
+        background: #2f2f2f;
+      }
+      .q-button-un-night:hover {
+        background: #1f1f1f;
+        border: 1px solid #1f1f1f;
+      }
+      .icon {
+        margin-right: 8px;
+      }
+    }
+    .comment-link {
+      color: #1b5397;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+    .comment-link:hover {
+      border-bottom: 1px solid #1b5397;
+    }
+    .comment-link-night {
+      color: #3C78F0;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+    .comment-link-night:hover {
+      border-bottom: 1px solid #3C78F0;
+    }
+    .c-load-more {
+      margin: 10px 0;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+  }
+}

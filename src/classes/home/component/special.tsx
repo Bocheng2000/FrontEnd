@@ -41,12 +41,14 @@ class Special extends React.Component<ISpecialProps, ISpecialState> {
         backgroundColor: '#F7F7F7',
         color: '#333333',
         border: '1px solid #DCDCDC',
+        block: '#FFFFFF'
       }
     } else {
       res = {
         backgroundColor: '#4A4A4A',
         color: '#C8C8C8',
         border: '1px solid #2F2F2F',
+        block: '#3F3F3F'
       }
     }
     return res
@@ -76,7 +78,10 @@ class Special extends React.Component<ISpecialProps, ISpecialState> {
     const { fontFamily, language } = this.props
     const config = this.getConfig()
     return (
-      <div id="special" style={{ fontFamily: getFontFamily(fontFamily) }}>
+      <div
+        id="special"
+        style={{ fontFamily: getFontFamily(fontFamily), background: config.block }}
+      >
         {dataSource.map(e => this.renderItems(e, config))}
         <div
           style={{
